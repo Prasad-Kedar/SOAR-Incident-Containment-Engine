@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SOAR Incident Containment Engine
 
 Project 3
@@ -16,3 +17,7 @@ Build a SOAR platform that automates:
 - Threat Intelligence
 - Incident Response
 - Dashboard Monitoring
+=======
+# SOAR-Incident-Containment-Engine
+infotact Cybersecurity Internship Project
+>>>>>>> origin/main
