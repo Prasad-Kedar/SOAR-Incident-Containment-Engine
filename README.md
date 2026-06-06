@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+
 # SOAR Incident Containment Engine
 
-Project 3
+Infotact Project 3
 
 Team:
 Prasad (Lead)
@@ -20,4 +20,3 @@ Build a SOAR platform that automates:
 =======
 # SOAR-Incident-Containment-Engine
 infotact Cybersecurity Internship Project
->>>>>>> origin/main
