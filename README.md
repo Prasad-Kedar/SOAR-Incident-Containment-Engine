@@ -37,4 +37,28 @@ Build a SOAR platform that automates:
 - Dashboard Monitoring
 =======
 # SOAR-Incident-Containment-Engine
+
+
+## API Research
+
+### VirusTotal API
+- Threat Intelligence
+- File Hash Analysis
+- URL Reputation
+
+### AbuseIPDB API
+- IP Reputation
+- Malicious IP Reporting
+- Threat Detection
+
 infotact Cybersecurity Internship Project
+
+## Alert Ingestion API
+
+POST /alerts
+
+Receives alerts from SIEM systems.
+
+GET /alerts
+
+Displays all received alerts.
