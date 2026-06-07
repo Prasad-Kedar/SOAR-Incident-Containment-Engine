@@ -62,3 +62,10 @@ Receives alerts from SIEM systems.
 GET /alerts
 
 Displays all received alerts.
+
+
+## 🎥 Project Demo
+
+Click the thumbnail below to watch the demo video:
+
+[![Project Demo](https://youtu.be/VqMqUd9eYB8?si=Ehxwh-BLyd7gV3KJ )
