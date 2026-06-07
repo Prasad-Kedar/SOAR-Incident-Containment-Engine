@@ -1,34 +1,50 @@
 from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def home():
-    return {
-        "message":"SOAR Engine Running"
-    }
-
-from fastapi import FastAPI
 from models import Alert
-from alerts import alerts_db
+from db_session import SessionLocal
+from backend.models_db import AlertDB
+from normalizer import normalize_alert
 
 app = FastAPI()
 
-@app.get("/")
-def home():
-    return {"message": "SOAR Engine Running"}
+
+@app.get("/alerts")
+def get_alerts():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    results = []
+
+    for alert in alerts:
+        results.append({
+            "id": alert.id,
+            "src_ip": alert.src_ip,
+            "severity": alert.severity,
+            "event_type": alert.event_type,
+            "timestamp": alert.timestamp
+        })
+
+    return results
 
 @app.post("/alerts")
 def receive_alert(alert: Alert):
 
-    alerts_db.append(alert.dict())
+    normalized = normalize_alert(alert)
+
+    db = SessionLocal()
+
+    new_alert = AlertDB(
+        src_ip=normalized["src_ip"],
+        severity=normalized["severity"],
+        event_type=normalized["event_type"],
+        timestamp=normalized["timestamp"]
+    )
+
+    db.add(new_alert)
+    db.commit()
 
     return {
         "status": "success",
-        "message": "Alert received",
-        "total_alerts": len(alerts_db)
+        "message": "Alert stored successfully"
     }
-
-@app.get("/alerts")
-def get_alerts():
-    return alerts_db

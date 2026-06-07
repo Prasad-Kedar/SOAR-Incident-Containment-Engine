@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from backend.models_db import Base
+from models_db import Base
 
 DATABASE_URL = "sqlite:///soar.db"
 
