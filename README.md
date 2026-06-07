@@ -68,4 +68,5 @@ Displays all received alerts.
 
 Click the thumbnail below to watch the demo video:
 
-[![Project Demo](https://youtu.be/VqMqUd9eYB8?si=Ehxwh-BLyd7gV3KJ )
+Project Demo
+https://youtu.be/VqMqUd9eYB8?si=RdB9dlTFJiotBA5b
