@@ -1,8 +1,8 @@
 .header {
     position: relative;
     height: 80px;
-    background: white;
-    border-bottom: 1px solid #ddd;
+    background:#0a1527;
+    border-bottom: 1px solid #334155;
 }
 
 .header h1 {
@@ -14,6 +14,8 @@
     margin: 0;
     font-size: 42px;
     font-weight: bold;
+
+    color: white; 
 }
 
 .header p {
@@ -25,4 +27,5 @@
     font-size: 18px;
     font-weight: 600;
     color: #374151;
+    color: #cbd5e1; 
 }

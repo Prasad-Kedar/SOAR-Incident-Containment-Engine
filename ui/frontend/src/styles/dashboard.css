@@ -21,4 +21,42 @@
     font-size: 42px;
     font-weight: bold;
     margin: 20px 0;
+    color:#354b6e
+}
+
+
+.alerts-table {
+  width: 95%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.alerts-table th,
+.alerts-table td {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.alerts-table th {
+  background: #354b6e;
+  color: white;
+}
+
+.critical {
+  color: red;
+  font-weight: bold;
+}
+
+.high {
+  color: orange;
+  font-weight: bold;
+}
+
+.medium {
+  color: blue;
+  font-weight: bold;
 }
