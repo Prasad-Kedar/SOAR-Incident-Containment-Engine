@@ -2,10 +2,10 @@
 The SOAR (Security Orchestration, Automation, and Response) Incident Containment Engine is designed to automate security operations by collecting alerts, analyzing threats, and assisting incident response teams in handling cybersecurity incidents efficiently.
 
 # Team Members
-Prasad (Lead)
-Al Ameen Ayoob
-Nelna
-Adarsh
+Prasad (Lead),
+Al Ameen Ayoob,
+Nelna,
+Adarsh,
 
 # Objectives
 Automate security incident handling
