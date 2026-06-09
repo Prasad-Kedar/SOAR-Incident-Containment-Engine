@@ -11,3 +11,4 @@ class AlertDB(Base):
     severity = Column(String)
     event_type = Column(String)
     timestamp = Column(String)
+    status = Column(String, default="OPEN")
