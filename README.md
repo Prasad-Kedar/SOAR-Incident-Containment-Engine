@@ -1,15 +1,15 @@
  SOAR-Incident-Containment-Eng
  
- Database Design
+# Database Design
 
 The project uses SQLite for data storage.
 
- Tables
+ # Tables
 - Users
 - Devices
 - Logs
 
- Relationships
+# Relationships
 - Users generate logs.
 - Devices are registered and monitored.
   
