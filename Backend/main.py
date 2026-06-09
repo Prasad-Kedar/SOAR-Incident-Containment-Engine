@@ -52,15 +52,15 @@ def dashboard_summary():
     total_alerts = db.query(AlertDB).count()
 
     high_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "HIGH"
+       AlertDB.severity == "high"
     ).count()
 
     medium_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "MEDIUM"
+        AlertDB.severity == "medium"
     ).count()
 
     low_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "LOW"
+        AlertDB.severity == "low"
     ).count()
 
     db.close()
