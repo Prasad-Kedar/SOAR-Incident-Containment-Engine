@@ -71,6 +71,34 @@ def dashboard_summary():
         "medium_alerts": medium_alerts,
         "low_alerts": low_alerts
     }
+
+@app.get("/dashboard/recent")
+def recent_alerts():
+
+    db = SessionLocal()
+
+    alerts = (
+        db.query(AlertDB)
+        .order_by(AlertDB.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    result = []
+
+    for alert in alerts:
+        result.append({
+            "id": alert.id,
+            "src_ip": alert.src_ip,
+            "severity": alert.severity,
+            "event_type": alert.event_type,
+            "timestamp": alert.timestamp
+        })
+
+    db.close()
+
+    return result
+
     normalized = normalize_alert(alert)
 
     intel = check_ip(
