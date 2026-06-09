@@ -36,6 +36,41 @@ def home():
 @app.post("/alerts")
 def receive_alert(alert: Alert):
 
+    return {
+    "status": "success",
+    "message": "Alert stored successfully",
+    "risk_score": risk_score,
+    "threat": threat
+}
+
+
+@app.get("/dashboard/summary")
+def dashboard_summary():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    high_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "HIGH"
+    ).count()
+
+    medium_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "MEDIUM"
+    ).count()
+
+    low_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "LOW"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "high_alerts": high_alerts,
+        "medium_alerts": medium_alerts,
+        "low_alerts": low_alerts
+    }
     normalized = normalize_alert(alert)
 
     intel = check_ip(
