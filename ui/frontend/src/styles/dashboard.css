@@ -1,0 +1,24 @@
+.dashboard {
+  display: flex;
+}
+
+.dashboard-content {
+  flex: 1;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;   /* Center the cards */
+  gap: 25px;
+  padding: 35px 60px;        /* Equal left and right padding */
+}
+
+.page-title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    margin: 20px 0;
+}

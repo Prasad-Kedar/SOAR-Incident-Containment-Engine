@@ -1,29 +1,20 @@
+import "../styles/dashboard.css";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
 
 function Dashboard() {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="dashboard">
       <Sidebar />
 
-      <div style={{ flex: 1, background: "#f5f5f5" }}>
+      <div className="dashboard-content">
         <Header />
 
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            padding: "20px",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="cards">
           <DashboardCard title="Total Alerts" value="120" />
-
           <DashboardCard title="Open Cases" value="18" />
-
           <DashboardCard title="Critical Alerts" value="9" />
-
           <DashboardCard title="Resolved Cases" value="102" />
         </div>
       </div>

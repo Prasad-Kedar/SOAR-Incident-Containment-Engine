@@ -1,14 +1,11 @@
+import "../styles/header.css";
+
 function Header() {
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        padding: "20px",
-        borderBottom: "1px solid #ddd",
-      }}
-    >
-      <h2>SOAR Incident Containment Dashboard</h2>
-    </div>
+   <div className="header">
+    <h1>SOC Dashboard</h1>
+    <p>Welcome Analyst</p>
+</div>
   );
 }
 

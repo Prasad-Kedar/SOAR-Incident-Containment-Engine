@@ -1,9 +1,8 @@
 function Alerts() {
   return (
-    <div>
-      <h1>Alerts</h1>
-      <p>Monitor and review security alerts.</p>
-    </div>
+    <>
+      <h1 className="page-title">Alerts</h1>
+    </>
   );
 }
 
