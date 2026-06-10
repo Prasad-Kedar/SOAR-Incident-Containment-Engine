@@ -153,9 +153,7 @@ def incident_intel(incident_id: int):
     ).first()
 
     if not incident:
-
         db.close()
-
         return {
             "message": "Incident not found"
         }
@@ -172,3 +170,27 @@ def incident_intel(incident_id: int):
         "risk_score": intel["risk_score"],
         "threat": intel["threat"]
     }
+
+
+@app.get("/incidents/high-risk")
+def high_risk_incidents():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "severity": incident.severity,
+            "status": incident.status
+        })
+
+    db.close()
+
+    return result
