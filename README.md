@@ -1,6 +1,4 @@
- Nelna
-  SOAR-Incident-Containment-Eng
- 
+
 # Database Design
 
 The project uses SQLite for data storage.
@@ -13,8 +11,6 @@ The project uses SQLite for data storage.
 # Relationships
 - Users generate logs.
 - Devices are registered and monitored.
-  
-## Day 6 Progress
 
 ### Backend Updates
 - Created Threat Intelligence Module.
@@ -52,13 +48,16 @@ Files:
 
 Infotact Project 3
 
-Team:
-Prasad (Lead)
-Al ameen ayoob
-Nelna   
-Adarsh
+# Team Members
 
-Objective:
+| Name | Role |
+|------|------|
+| Prasad | Team Lead |
+| Al Ameen Ayoob | Developer |
+| Nelna Siyad | Documentation & Testing |
+| Adarsh | Developer |
+
+# Objective:
 
 Build a SOAR platform that automates:
 
