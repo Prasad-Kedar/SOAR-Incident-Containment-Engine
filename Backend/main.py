@@ -129,3 +129,15 @@ def recent_alerts():
     db.close()
 
     return result
+
+
+@app.get("/threat/{ip}")
+def threat_lookup(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
