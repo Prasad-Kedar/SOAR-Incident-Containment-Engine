@@ -83,3 +83,27 @@ Security analysts can retrieve alerts through the API and investigate high-risk 
 * Better alert prioritization
 * Improved SOC visibility
 * Foundation for automated response workflows
+
+# Threat Intelligence Workflow
+
+Alert Received
+
+↓
+
+IP Address Extracted
+
+↓
+
+Threat Intelligence Lookup
+
+↓
+
+Risk Score Generated
+
+↓
+
+Incident Enrichment
+
+↓
+
+SOC Analyst Investigation
