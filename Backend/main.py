@@ -141,3 +141,34 @@ def threat_lookup(ip: str):
         "risk_score": intel["risk_score"],
         "threat": intel["threat"]
     }
+
+
+@app.get("/incident/{incident_id}/intel")
+def incident_intel(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+
+        db.close()
+
+        return {
+            "message": "Incident not found"
+        }
+
+    intel = check_ip(
+        incident.src_ip
+    )
+
+    db.close()
+
+    return {
+        "incident_id": incident.id,
+        "src_ip": incident.src_ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
