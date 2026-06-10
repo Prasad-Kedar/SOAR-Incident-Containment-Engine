@@ -129,3 +129,68 @@ def recent_alerts():
     db.close()
 
     return result
+
+
+@app.get("/threat/{ip}")
+def threat_lookup(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incident/{incident_id}/intel")
+def incident_intel(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+
+    intel = check_ip(
+        incident.src_ip
+    )
+
+    db.close()
+
+    return {
+        "incident_id": incident.id,
+        "src_ip": incident.src_ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incidents/high-risk")
+def high_risk_incidents():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "severity": incident.severity,
+            "status": incident.status
+        })
+
+    db.close()
+
+    return result
