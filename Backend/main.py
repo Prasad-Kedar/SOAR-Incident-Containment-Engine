@@ -3,6 +3,7 @@ from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
 from models_db import ResponseAction
+from models_db import AlertDB, ResponseAction
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -205,7 +206,7 @@ def block_ip(incident_id: int):
         incident_id=incident_id,
         action_type="BLOCK_IP",
         status="SUCCESS",
-        timestamp=str(datetime.now())
+        timestamp=datetime.now()
     )
 
     db.add(action)
@@ -260,3 +261,79 @@ def response_history():
     db.close()
 
     return result
+
+@app.get("/dashboard/security-metrics")
+def security_metrics():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    high_risk = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents,
+        "high_risk_incidents": high_risk
+    }
+
+@app.get("/dashboard/response-metrics")
+def response_metrics():
+
+    db = SessionLocal()
+
+    total_actions = db.query(ResponseAction).count()
+
+    blocked_ips = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "BLOCK_IP"
+    ).count()
+
+    isolated_hosts = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "ISOLATE_HOST"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_actions": total_actions,
+        "blocked_ips": blocked_ips,
+        "isolated_hosts": isolated_hosts
+    }
+
+@app.get("/dashboard/trends")
+def incident_trends():
+
+    db = SessionLocal()
+
+    high_count = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    medium_count = db.query(AlertDB).filter(
+        AlertDB.severity == "medium"
+    ).count()
+
+    low_count = db.query(AlertDB).filter(
+        AlertDB.severity == "low"
+    ).count()
+
+    db.close()
+
+    return {
+        "high": high_count,
+        "medium": medium_count,
+        "low": low_count
+    }
