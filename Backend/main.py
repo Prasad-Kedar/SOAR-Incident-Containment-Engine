@@ -3,6 +3,7 @@ from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
 from models_db import ResponseAction
+from models_db import AlertDB, ResponseAction
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -205,7 +206,7 @@ def block_ip(incident_id: int):
         incident_id=incident_id,
         action_type="BLOCK_IP",
         status="SUCCESS",
-        timestamp=str(datetime.now())
+        timestamp=datetime.now()
     )
 
     db.add(action)
@@ -260,3 +261,31 @@ def response_history():
     db.close()
 
     return result
+
+@app.get("/dashboard/security-metrics")
+def security_metrics():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    high_risk = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents,
+        "high_risk_incidents": high_risk
+    }
