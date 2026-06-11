@@ -312,3 +312,28 @@ def response_metrics():
         "blocked_ips": blocked_ips,
         "isolated_hosts": isolated_hosts
     }
+
+@app.get("/dashboard/trends")
+def incident_trends():
+
+    db = SessionLocal()
+
+    high_count = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    medium_count = db.query(AlertDB).filter(
+        AlertDB.severity == "medium"
+    ).count()
+
+    low_count = db.query(AlertDB).filter(
+        AlertDB.severity == "low"
+    ).count()
+
+    db.close()
+
+    return {
+        "high": high_count,
+        "medium": medium_count,
+        "low": low_count
+    }
