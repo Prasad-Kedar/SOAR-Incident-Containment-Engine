@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from models import Alert
+from datetime import datetime
 from db_session import SessionLocal
-from models_db import AlertDB
+from models_db import ResponseAction
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -194,3 +195,23 @@ def high_risk_incidents():
     db.close()
 
     return result
+
+@app.post("/response/block-ip/{incident_id}")
+def block_ip(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="BLOCK_IP",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+    db.commit()
+    db.close()
+
+    return {
+        "message": "IP blocked successfully"
+    }
