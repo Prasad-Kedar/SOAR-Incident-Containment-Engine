@@ -289,3 +289,26 @@ def security_metrics():
         "closed_incidents": closed_incidents,
         "high_risk_incidents": high_risk
     }
+
+@app.get("/dashboard/response-metrics")
+def response_metrics():
+
+    db = SessionLocal()
+
+    total_actions = db.query(ResponseAction).count()
+
+    blocked_ips = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "BLOCK_IP"
+    ).count()
+
+    isolated_hosts = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "ISOLATE_HOST"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_actions": total_actions,
+        "blocked_ips": blocked_ips,
+        "isolated_hosts": isolated_hosts
+    }
