@@ -237,3 +237,26 @@ def isolate_host(incident_id: int):
     return {
         "message": "Host isolated successfully"
     }
+
+@app.get("/responses")
+def response_history():
+
+    db = SessionLocal()
+
+    actions = db.query(ResponseAction).all()
+
+    result = []
+
+    for action in actions:
+
+        result.append({
+            "id": action.id,
+            "incident_id": action.incident_id,
+            "action_type": action.action_type,
+            "status": action.status,
+            "timestamp": action.timestamp
+        })
+
+    db.close()
+
+    return result
