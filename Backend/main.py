@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from models import Alert
+from datetime import datetime
 from db_session import SessionLocal
-from models_db import AlertDB
+from models_db import ResponseAction
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -189,6 +190,71 @@ def high_risk_incidents():
             "src_ip": incident.src_ip,
             "severity": incident.severity,
             "status": incident.status
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/response/block-ip/{incident_id}")
+def block_ip(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="BLOCK_IP",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+    db.commit()
+    db.close()
+
+    return {
+        "message": "IP blocked successfully"
+    }
+
+@app.post("/response/isolate-host/{incident_id}")
+def isolate_host(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="ISOLATE_HOST",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Host isolated successfully"
+    }
+
+@app.get("/responses")
+def response_history():
+
+    db = SessionLocal()
+
+    actions = db.query(ResponseAction).all()
+
+    result = []
+
+    for action in actions:
+
+        result.append({
+            "id": action.id,
+            "incident_id": action.incident_id,
+            "action_type": action.action_type,
+            "status": action.status,
+            "timestamp": action.timestamp
         })
 
     db.close()
