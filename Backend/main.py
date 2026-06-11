@@ -215,3 +215,25 @@ def block_ip(incident_id: int):
     return {
         "message": "IP blocked successfully"
     }
+
+@app.post("/response/isolate-host/{incident_id}")
+def isolate_host(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="ISOLATE_HOST",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Host isolated successfully"
+    }
