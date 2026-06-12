@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from models import Alert
+from datetime import datetime
 from db_session import SessionLocal
-from models_db import AlertDB
+from models_db import ResponseAction
+from models_db import AlertDB, ResponseAction, NotificationLog
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -124,6 +126,269 @@ def recent_alerts():
             "event_type": alert.event_type,
             "timestamp": alert.timestamp,
             "status": alert.status
+        })
+
+    db.close()
+
+    return result
+
+
+@app.get("/threat/{ip}")
+def threat_lookup(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incident/{incident_id}/intel")
+def incident_intel(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+
+    intel = check_ip(
+        incident.src_ip
+    )
+
+    db.close()
+
+    return {
+        "incident_id": incident.id,
+        "src_ip": incident.src_ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incidents/high-risk")
+def high_risk_incidents():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "severity": incident.severity,
+            "status": incident.status
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/response/block-ip/{incident_id}")
+def block_ip(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="BLOCK_IP",
+        status="SUCCESS",
+        timestamp=datetime.now()
+    )
+
+    db.add(action)
+    db.commit()
+    db.close()
+
+    return {
+        "message": "IP blocked successfully"
+    }
+
+@app.post("/response/isolate-host/{incident_id}")
+def isolate_host(incident_id: int):
+
+    db = SessionLocal()
+
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="ISOLATE_HOST",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Host isolated successfully"
+    }
+
+@app.get("/responses")
+def response_history():
+
+    db = SessionLocal()
+
+    actions = db.query(ResponseAction).all()
+
+    result = []
+
+    for action in actions:
+
+        result.append({
+            "id": action.id,
+            "incident_id": action.incident_id,
+            "action_type": action.action_type,
+            "status": action.status,
+            "timestamp": action.timestamp
+        })
+
+    db.close()
+
+    return result
+
+@app.get("/dashboard/security-metrics")
+def security_metrics():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    high_risk = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents,
+        "high_risk_incidents": high_risk
+    }
+
+@app.get("/dashboard/response-metrics")
+def response_metrics():
+
+    db = SessionLocal()
+
+    total_actions = db.query(ResponseAction).count()
+
+    blocked_ips = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "BLOCK_IP"
+    ).count()
+
+    isolated_hosts = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "ISOLATE_HOST"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_actions": total_actions,
+        "blocked_ips": blocked_ips,
+        "isolated_hosts": isolated_hosts
+    }
+
+@app.get("/dashboard/trends")
+def incident_trends():
+
+    db = SessionLocal()
+
+    high_count = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    medium_count = db.query(AlertDB).filter(
+        AlertDB.severity == "medium"
+    ).count()
+
+    low_count = db.query(AlertDB).filter(
+        AlertDB.severity == "low"
+    ).count()
+
+    db.close()
+
+    return {
+        "high": high_count,
+        "medium": medium_count,
+        "low": low_count
+    }
+
+@app.post("/notify/{incident_id}")
+def notify_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    notification = NotificationLog(
+        incident_id=incident_id,
+        notification_type="EMAIL",
+        recipient="soc-team@company.local",
+        status="SENT",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(notification)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Notification sent successfully"
+    }
+
+@app.post("/incident/{incident_id}/escalate")
+def escalate_incident(incident_id: int):
+
+    return {
+        "incident_id": incident_id,
+        "status": "ESCALATED",
+        "assigned_team": "SOC-L2"
+    }
+
+@app.get("/notifications")
+def get_notifications():
+
+    db = SessionLocal()
+
+    notifications = db.query(
+        NotificationLog
+    ).all()
+
+    result = []
+
+    for n in notifications:
+
+        result.append({
+            "id": n.id,
+            "incident_id": n.incident_id,
+            "recipient": n.recipient,
+            "status": n.status,
+            "timestamp": n.timestamp
         })
 
     db.close()

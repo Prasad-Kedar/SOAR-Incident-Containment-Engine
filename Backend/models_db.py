@@ -3,6 +3,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 class AlertDB(Base):
     __tablename__ = "alerts"
 
@@ -12,3 +13,30 @@ class AlertDB(Base):
     event_type = Column(String)
     timestamp = Column(String)
     status = Column(String, default="OPEN")
+
+
+class ResponseAction(Base):
+    __tablename__ = "response_actions"
+
+    id = Column(Integer, primary_key=True)
+    incident_id = Column(Integer)
+    action_type = Column(String)
+    status = Column(String)
+    timestamp = Column(String)
+
+    
+class NotificationLog(Base):
+
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True)
+
+    incident_id = Column(Integer)
+
+    notification_type = Column(String)
+
+    recipient = Column(String)
+
+    status = Column(String)
+
+    timestamp = Column(String)
