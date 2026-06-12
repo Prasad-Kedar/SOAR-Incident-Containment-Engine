@@ -23,3 +23,20 @@ class ResponseAction(Base):
     action_type = Column(String)
     status = Column(String)
     timestamp = Column(String)
+
+    
+class NotificationLog(Base):
+
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True)
+
+    incident_id = Column(Integer)
+
+    notification_type = Column(String)
+
+    recipient = Column(String)
+
+    status = Column(String)
+
+    timestamp = Column(String)
