@@ -3,7 +3,7 @@ from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
 from models_db import ResponseAction
-from models_db import AlertDB, ResponseAction
+from models_db import AlertDB, ResponseAction, NotificationLog
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -337,3 +337,60 @@ def incident_trends():
         "medium": medium_count,
         "low": low_count
     }
+
+@app.post("/notify/{incident_id}")
+def notify_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    notification = NotificationLog(
+        incident_id=incident_id,
+        notification_type="EMAIL",
+        recipient="soc-team@company.local",
+        status="SENT",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(notification)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Notification sent successfully"
+    }
+
+@app.post("/incident/{incident_id}/escalate")
+def escalate_incident(incident_id: int):
+
+    return {
+        "incident_id": incident_id,
+        "status": "ESCALATED",
+        "assigned_team": "SOC-L2"
+    }
+
+@app.get("/notifications")
+def get_notifications():
+
+    db = SessionLocal()
+
+    notifications = db.query(
+        NotificationLog
+    ).all()
+
+    result = []
+
+    for n in notifications:
+
+        result.append({
+            "id": n.id,
+            "incident_id": n.incident_id,
+            "recipient": n.recipient,
+            "status": n.status,
+            "timestamp": n.timestamp
+        })
+
+    db.close()
+
+    return result
