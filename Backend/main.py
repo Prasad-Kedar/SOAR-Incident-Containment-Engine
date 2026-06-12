@@ -360,3 +360,12 @@ def notify_incident(incident_id: int):
     return {
         "message": "Notification sent successfully"
     }
+
+@app.post("/incident/{incident_id}/escalate")
+def escalate_incident(incident_id: int):
+
+    return {
+        "incident_id": incident_id,
+        "status": "ESCALATED",
+        "assigned_team": "SOC-L2"
+    }
