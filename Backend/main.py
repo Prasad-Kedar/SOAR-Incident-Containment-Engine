@@ -369,3 +369,28 @@ def escalate_incident(incident_id: int):
         "status": "ESCALATED",
         "assigned_team": "SOC-L2"
     }
+
+@app.get("/notifications")
+def get_notifications():
+
+    db = SessionLocal()
+
+    notifications = db.query(
+        NotificationLog
+    ).all()
+
+    result = []
+
+    for n in notifications:
+
+        result.append({
+            "id": n.id,
+            "incident_id": n.incident_id,
+            "recipient": n.recipient,
+            "status": n.status,
+            "timestamp": n.timestamp
+        })
+
+    db.close()
+
+    return result
