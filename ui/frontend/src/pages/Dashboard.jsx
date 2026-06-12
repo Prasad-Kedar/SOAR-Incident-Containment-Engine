@@ -18,93 +18,98 @@ function Dashboard() {
           <DashboardCard title="Resolved Cases" value="102" />
         </div>
 
-<div className="dashboard-section">
+
+<div className="dashboard-tables">
+
+  <div className="dashboard-section">
 
     <h2>Recent Alerts</h2>
 
     <table className="dashboard-table">
 
-        <thead>
-            <tr>
-                <th>Alert ID</th>
-                <th>Source</th>
-                <th>Severity</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th>Alert ID</th>
+          <th>Source</th>
+          <th>Severity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
 
-        <tbody>
+      <tbody>
+        <tr>
+          <td>ALT-001</td>
+          <td>Firewall</td>
+          <td><span className="critical">Critical</span></td>
+          <td><span className="open">Open</span></td>
+        </tr>
 
-            <tr>
-                <td>ALT-001</td>
-                <td>Firewall</td>
-                <td><span className="critical">Critical</span></td>
-                <td><span className="open">Open</span></td>
-            </tr>
+        <tr>
+          <td>ALT-002</td>
+          <td>SIEM</td>
+          <td><span className="high">High</span></td>
+          <td><span className="progress">In Progress</span></td>
+        </tr>
 
-            <tr>
-                <td>ALT-002</td>
-                <td>SIEM</td>
-                <td><span className="high">High</span></td>
-                <td><span className="progress">In Progress</span></td>
-            </tr>
-
-            <tr>
-                <td>ALT-003</td>
-                <td>IDS</td>
-                <td><span className="medium">Medium</span></td>
-                <td><span className="closed">Closed</span></td>
-            </tr>
-
-        </tbody>
+        <tr>
+          <td>ALT-003</td>
+          <td>IDS</td>
+          <td><span className="medium">Medium</span></td>
+          <td><span className="closed">Closed</span></td>
+        </tr>
+      </tbody>
 
     </table>
 
-</div>
+  </div>
 
-<div className="dashboard-section">
+  <div className="dashboard-section">
 
     <h2>Recent Cases</h2>
 
     <table className="dashboard-table">
 
-        <thead>
-            <tr>
-                <th>Case ID</th>
-                <th>Assigned To</th>
-                <th>Priority</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th>Case ID</th>
+          <th>Assigned To</th>
+          <th>Priority</th>
+          <th>Status</th>
+        </tr>
+      </thead>
 
-        <tbody>
+      <tbody>
+        <tr>
+          <td>CASE-001</td>
+          <td>Analyst 1</td>
+          <td><span className="critical">Critical</span></td>
+          <td><span className="open">Open</span></td>
+        </tr>
 
-            <tr>
-                <td>CASE-001</td>
-                <td>Analyst 1</td>
-                <td><span className="critical">Critical</span></td>
-                <td><span className="open">Open</span></td>
-            </tr>
+        <tr>
+          <td>CASE-002</td>
+          <td>Analyst 2</td>
+          <td><span className="high">High</span></td>
+          <td><span className="progress">In Progress</span></td>
+        </tr>
 
-            <tr>
-                <td>CASE-002</td>
-                <td>Analyst 2</td>
-                <td><span className="high">High</span></td>
-                <td><span className="progress">In Progress</span></td>
-            </tr>
-
-            <tr>
-                <td>CASE-003</td>
-                <td>Analyst 3</td>
-                <td><span className="medium">Medium</span></td>
-                <td><span className="closed">Closed</span></td>
-            </tr>
-
-        </tbody>
+        <tr>
+          <td>CASE-003</td>
+          <td>Analyst 3</td>
+          <td><span className="medium">Medium</span></td>
+          <td><span className="closed">Closed</span></td>
+        </tr>
+      </tbody>
 
     </table>
 
+  </div>
+
 </div>
+
+
+
+
 
 <div className="dashboard-section">
 
@@ -152,7 +157,7 @@ function Dashboard() {
 
 
       </div>
-    </div>
+   </div>
   );
 }
 

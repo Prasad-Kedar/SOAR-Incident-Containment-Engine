@@ -68,10 +68,15 @@
 }
 
 .dashboard-section h2{
+
     text-align:left;
+
     margin-bottom:15px;
+
     color:#1e293b;
+
 }
+
 
 .dashboard-table{
     width:100%;
@@ -96,12 +101,18 @@
 
 
 .severity-container {
+
     width: 95%;
+
     margin: 20px auto;
+
     background: white;
+
     padding: 25px;
+
     border-radius: 10px;
-}
+
+} 
 
 .severity-row {
     display: flex;
@@ -141,4 +152,34 @@
 
 .low-fill {
     background: #16a34a;
+}
+
+
+
+
+.dashboard-tables {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    width: 95%;
+    margin: 30px auto;
+    flex-wrap: wrap;
+}
+
+.dashboard-section{
+    flex: 1;
+    min-width: 450px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+.dashboard-section h2{
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 700;
 }
