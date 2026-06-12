@@ -60,3 +60,85 @@
   color: blue;
   font-weight: bold;
 }
+
+
+.dashboard-section{
+    width:95%;
+    margin:35px auto;
+}
+
+.dashboard-section h2{
+    text-align:left;
+    margin-bottom:15px;
+    color:#1e293b;
+}
+
+.dashboard-table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.dashboard-table th{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+}
+
+.dashboard-table td{
+    padding:15px;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+}
+
+
+
+.severity-container {
+    width: 95%;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+.severity-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.severity-label {
+    width: 80px;
+    font-weight: bold;
+}
+
+.severity-bar {
+    flex: 1;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.severity-fill {
+    height: 100%;
+}
+
+.critical-fill {
+    background: #dc2626;
+}
+
+.high-fill {
+    background: #ea580c;
+}
+
+.medium-fill {
+    background: #eab308;
+}
+
+.low-fill {
+    background: #16a34a;
+}
