@@ -3,7 +3,7 @@ from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
 from models_db import ResponseAction
-from models_db import AlertDB, ResponseAction, NotificationLog
+from models_db import AlertDB, ResponseAction, NotificationLog, Analyst
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -389,6 +389,85 @@ def get_notifications():
             "recipient": n.recipient,
             "status": n.status,
             "timestamp": n.timestamp
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/analysts")
+def create_analyst():
+
+    try:
+        db = SessionLocal()
+
+        analyst = Analyst(
+            name="Prasad",
+            email="Prasad@soc.local",
+            role="SOC Analyst"
+        )
+
+        db.add(analyst)
+        db.commit()
+        db.close()
+
+        return {
+            "message": "Analyst created successfully"
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+
+
+@app.put("/incident/{incident_id}/assign/{analyst_name}")
+def assign_incident(
+    incident_id: int,
+    analyst_name: str
+):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+
+        return {
+            "message": "Incident not found"
+        }
+
+    incident.assigned_to = analyst_name
+
+    db.commit()
+    db.close()
+
+    return {
+        "message": "Incident assigned",
+        "analyst": analyst_name
+    }
+
+@app.get("/analyst/{name}/incidents")
+def analyst_incidents(name: str):
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.assigned_to == name
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "status": incident.status,
+            "severity": incident.severity
         })
 
     db.close()
