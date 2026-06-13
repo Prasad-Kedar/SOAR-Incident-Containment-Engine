@@ -449,3 +449,27 @@ def assign_incident(
         "message": "Incident assigned",
         "analyst": analyst_name
     }
+
+@app.get("/analyst/{name}/incidents")
+def analyst_incidents(name: str):
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.assigned_to == name
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "status": incident.status,
+            "severity": incident.severity
+        })
+
+    db.close()
+
+    return result
