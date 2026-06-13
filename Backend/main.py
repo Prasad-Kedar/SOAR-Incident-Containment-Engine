@@ -419,3 +419,33 @@ def create_analyst():
         return {
             "error": str(e)
         }
+
+
+@app.put("/incident/{incident_id}/assign/{analyst_name}")
+def assign_incident(
+    incident_id: int,
+    analyst_name: str
+):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+
+        return {
+            "message": "Incident not found"
+        }
+
+    incident.assigned_to = analyst_name
+
+    db.commit()
+    db.close()
+
+    return {
+        "message": "Incident assigned",
+        "analyst": analyst_name
+    }
