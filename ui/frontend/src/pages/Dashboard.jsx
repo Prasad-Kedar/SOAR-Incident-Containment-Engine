@@ -1,9 +1,33 @@
+import { useEffect, useState } from "react";
 import "../styles/dashboard.css";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
+import { getSecurityMetrics } from "../services/dashboardService";
 
 function Dashboard() {
+
+const [metrics, setMetrics] = useState({
+  total_alerts: 0,
+  open_incidents: 0,
+  closed_incidents: 0,
+  high_risk_incidents: 0,
+});
+
+
+useEffect(() => {
+  async function loadMetrics() {
+    try {
+      const data = await getSecurityMetrics();
+      setMetrics(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  loadMetrics();
+}, []);
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -12,10 +36,25 @@ function Dashboard() {
         <Header />
 
         <div className="cards">
-          <DashboardCard title="Total Alerts" value="120" />
-          <DashboardCard title="Open Cases" value="18" />
-          <DashboardCard title="Critical Alerts" value="9" />
-          <DashboardCard title="Resolved Cases" value="102" />
+         <DashboardCard
+  title="Total Alerts"
+  value={metrics.total_alerts}
+/>
+
+<DashboardCard
+  title="Open Incidents"
+  value={metrics.open_incidents}
+/>
+
+<DashboardCard
+  title="High Risk Incidents"
+  value={metrics.high_risk_incidents}
+/>
+
+<DashboardCard
+  title="Closed Incidents"
+  value={metrics.closed_incidents}
+/>
         </div>
 
 
