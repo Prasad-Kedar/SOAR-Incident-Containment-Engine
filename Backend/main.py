@@ -486,7 +486,7 @@ def create_audit_log():
     db = SessionLocal()
 
     log = AuditLog(
-        analyst="Adarsh",
+        analyst="Prasad",
         action="Assigned Incident",
         incident_id=1,
         timestamp=str(datetime.now())
@@ -501,3 +501,26 @@ def create_audit_log():
     return {
         "message": "Audit log created"
     }
+
+@app.get("/audit/logs")
+def get_audit_logs():
+
+    db = SessionLocal()
+
+    logs = db.query(AuditLog).all()
+
+    result = []
+
+    for log in logs:
+
+        result.append({
+            "id": log.id,
+            "analyst": log.analyst,
+            "action": log.action,
+            "incident_id": log.incident_id,
+            "timestamp": log.timestamp
+        })
+
+    db.close()
+
+    return result
