@@ -44,3 +44,13 @@ class Analyst(Base):
     name = Column(String)
     email = Column(String)
     role = Column(String)
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True)
+    analyst = Column(String)
+    action = Column(String)
+    incident_id = Column(Integer)
+    timestamp = Column(String)

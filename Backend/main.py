@@ -3,7 +3,13 @@ from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
 from models_db import ResponseAction
-from models_db import AlertDB, ResponseAction, NotificationLog, Analyst
+from models_db import (
+    AlertDB,
+    ResponseAction,
+    NotificationLog,
+    Analyst,
+    AuditLog
+)
 from normalizer import normalize_alert
 from threat_intel import check_ip
 
@@ -473,3 +479,25 @@ def analyst_incidents(name: str):
     db.close()
 
     return result
+
+@app.post("/audit/log")
+def create_audit_log():
+
+    db = SessionLocal()
+
+    log = AuditLog(
+        analyst="Adarsh",
+        action="Assigned Incident",
+        incident_id=1,
+        timestamp=str(datetime.now())
+    )
+
+    db.add(log)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Audit log created"
+    }
