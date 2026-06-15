@@ -561,3 +561,10 @@ def login():
     return {
         "access_token": token
     }
+
+@app.get("/secure/dashboard")
+def secure_dashboard():
+
+    return {
+        "message": "Authorized Access"
+    }
