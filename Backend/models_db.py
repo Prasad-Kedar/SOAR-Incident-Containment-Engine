@@ -54,3 +54,14 @@ class AuditLog(Base):
     action = Column(String)
     incident_id = Column(Integer)
     timestamp = Column(String)
+ 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+
+    username = Column(String)
+
+    password = Column(String)
+
+    role = Column(String)

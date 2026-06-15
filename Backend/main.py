@@ -12,8 +12,11 @@ from models_db import (
 )
 from normalizer import normalize_alert
 from threat_intel import check_ip
+from jose import jwt
+from models_db import User
 
 app = FastAPI()
+SECRET_KEY = "soar-secret-key"
 
 
 @app.get("/")
@@ -524,3 +527,24 @@ def get_audit_logs():
     db.close()
 
     return result
+
+@app.post("/users")
+def create_user():
+
+    db = SessionLocal()
+
+    user = User(
+        username="admin",
+        password="admin123",
+        role="SOC_ADMIN"
+    )
+
+    db.add(user)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "User created successfully"
+    }
