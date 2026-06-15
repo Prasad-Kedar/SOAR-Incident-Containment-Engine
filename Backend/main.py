@@ -548,3 +548,16 @@ def create_user():
     return {
         "message": "User created successfully"
     }
+
+@app.post("/login")
+def login():
+
+    token = jwt.encode(
+        {"user": "admin"},
+        SECRET_KEY,
+        algorithm="HS256"
+    )
+
+    return {
+        "access_token": token
+    }
