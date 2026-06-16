@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from models import Alert
 from datetime import datetime
@@ -16,8 +17,19 @@ from jose import jwt
 from models_db import User
 
 app = FastAPI()
-SECRET_KEY = "soar-secret-key"
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+SECRET_KEY = "soar-secret-key"
 
 @app.get("/")
 def home():
@@ -567,4 +579,37 @@ def secure_dashboard():
 
     return {
         "message": "Authorized Access"
+    }
+
+@app.get("/admin/dashboard")
+def admin_dashboard():
+
+    return {
+        "role": "SOC_ADMIN",
+        "message": "Admin Dashboard Access Granted"
+    }
+
+@app.get("/analyst/dashboard")
+def analyst_dashboard():
+
+    return {
+        "role": "SOC_ANALYST",
+        "message": "Analyst Dashboard Access Granted"
+    }
+
+@app.get("/role/{role}")
+def check_role(role: str):
+
+    if role == "SOC_ADMIN":
+        return {
+            "permission": "full-access"
+        }
+
+    if role == "SOC_ANALYST":
+        return {
+            "permission": "incident-management"
+        }
+
+    return {
+        "permission": "read-only"
     }
