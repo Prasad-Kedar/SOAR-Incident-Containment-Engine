@@ -296,13 +296,14 @@ pip install -r requirements.txt
 
 python Backend/main.py
 
-# API Summary
+## API Summary
 
-Endpoint| Method| Description
-/alerts| GET| Retrieve security alerts
-/incidents| GET| Retrieve incidents
-/threats| GET| Retrieve threat intelligence data
-/contain| POST| Execute containment actions
+| Endpoint   | Method | Description |
+|------------|--------|-------------|
+| /alerts    | GET    | Retrieve security alerts |
+| /incidents | GET    | Retrieve incidents |
+| /threats   | GET    | Retrieve threat intelligence data |
+| /contain   | POST   | Execute containment actions |
 
 # Future Scope
 
@@ -320,36 +321,42 @@ Endpoint| Method| Description
 - Nelna
 - Adarsh
   
-# System Architecture Diagram
+## System Architecture Diagram
 
-+-------------+
-|    User     |
-+------+------+
-       |
-       v
-+-------------+
-| UI Dashboard|
-+------+------+
-       |
-       v
-+-------------+
-|  API Layer  |
-+------+------+
-       |
-       v
-+-------------+
-| Services    |
-| Layer       |
-+------+------+
-       |
-       +----------------+
-       |                |
-       v                v
-+-------------+   +-------------+
-| Database    |   | Threat Intel|
-+-------------+   +-------------+
+```text
++--------+
+|  User  |
++--------+
+     |
+     v
++--------------+
+| UI Dashboard |
++--------------+
+     |
+     v
++-----------+
+| API Layer |
++-----------+
+     |
+     v
++-----------+
+| Services  |
++-----------+
+     |
+     v
++-----------+
+| Database  |
++-----------+
 
-# Description
+     |
+     v
+
++--------------+
+| Threat Intel |
++--------------+
+```
+
+ Description
 
 - User interacts with the dashboard.
 - UI sends requests to API endpoints.
@@ -358,35 +365,55 @@ Endpoint| Method| Description
 - Database stores incident and alert data.
 - Threat Intelligence enriches security events
   
-# SOAR Workflow Diagram
+## SOAR Workflow Diagram
 
-Alert Generated
-       |
-       v
-Alert Ingestion
-       |
-       v
-Threat Intelligence Enrichment
-       |
-       v
-Incident Creation
-       |
-       v
-Automated Analysis
-       |
-       v
-Containment Action
-       |
-       v
-Investigation
-       |
-       v
-Resolution
-       |
-       v
-Closure
+```text
++-----------------+
+| Alert Generated |
++-----------------+
+         |
+         v
++-----------------+
+| Alert Ingestion |
++-----------------+
+         |
+         v
++------------------------------+
+| Threat Intelligence Enrichment |
++------------------------------+
+         |
+         v
++------------------+
+| Incident Creation|
++------------------+
+         |
+         v
++-------------------+
+| Automated Analysis|
++-------------------+
+         |
+         v
++-------------------+
+| Containment Action|
++-------------------+
+         |
+         v
++---------------+
+| Investigation |
++---------------+
+         |
+         v
++------------+
+| Resolution |
++------------+
+         |
+         v
++---------+
+| Closure |
++---------+
+```
 
-# Description
+ Description
 
 The SOAR platform automates incident handling from alert ingestion to final closure.
 
@@ -409,7 +436,7 @@ Recovery
     v
 Lessons Learned
 
-# Description
+ Description
 
 1. Detection of security events.
 2. Analysis and validation.
@@ -443,34 +470,51 @@ Response Executed
       v
 Incident Closed
 
-# Description
+Description
 The alert lifecycle tracks a security alert from creation through investigation and closure
 
-# Dashboard Workflow Explanation
-Dashboard Load
-      |
-      v
-API Request
-      |
-      v
-Service Processing
-      |
-      v
-Database Query
-      |
-      v
-Data Aggregation
-      |
-      v
-Dashboard Display
-      |
-      v
-User Actionsv
+## Dashboard Workflow Explanation
 
-# Description
-Dashboard requests data through APIs.
-Services process alerts and incidents.
-Data is retrieved from the database.
-Results are displayed as widgets, tables, and charts.
-Users can investigate alerts and trigger containment actions.
+```text
++----------------+
+| Dashboard Load |
++----------------+
+        |
+        v
++-------------+
+| API Request |
++-------------+
+        |
+        v
++--------------------+
+| Service Processing |
++--------------------+
+        |
+        v
++----------------+
+| Database Query |
++----------------+
+        |
+        v
++------------------+
+| Data Aggregation |
++------------------+
+        |
+        v
++------------------+
+| Dashboard Display|
++------------------+
+        |
+        v
++--------------+
+| User Actions |
++--------------+
+```
+
+Description
+- Dashboard requests data through APIs.
+- Services process alerts and incidents.
+- Data is retrieved from the database.
+- Results are displayed as widgets, tables, and charts.
+- Users can investigate alerts and trigger containment actions.
 
