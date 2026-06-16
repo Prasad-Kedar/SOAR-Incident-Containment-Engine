@@ -445,8 +445,9 @@ Lessons Learned
 5. Recovery of systems.
 6. Documentation and improvement.
 
-# document alert lifecycle
+## Document Alert Lifecycle
 
+```text
 Alert Generated
       |
       v
@@ -469,9 +470,11 @@ Response Executed
       |
       v
 Incident Closed
+```
 
-Description
-The alert lifecycle tracks a security alert from creation through investigation and closure
+ Description
+
+The alert lifecycle tracks a security alert from creation through investigation, response, and closure.
 
 ## Dashboard Workflow Explanation
 
