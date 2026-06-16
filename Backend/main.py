@@ -588,3 +588,11 @@ def admin_dashboard():
         "role": "SOC_ADMIN",
         "message": "Admin Dashboard Access Granted"
     }
+
+@app.get("/analyst/dashboard")
+def analyst_dashboard():
+
+    return {
+        "role": "SOC_ANALYST",
+        "message": "Analyst Dashboard Access Granted"
+    }
