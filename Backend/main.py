@@ -596,3 +596,20 @@ def analyst_dashboard():
         "role": "SOC_ANALYST",
         "message": "Analyst Dashboard Access Granted"
     }
+
+@app.get("/role/{role}")
+def check_role(role: str):
+
+    if role == "SOC_ADMIN":
+        return {
+            "permission": "full-access"
+        }
+
+    if role == "SOC_ANALYST":
+        return {
+            "permission": "incident-management"
+        }
+
+    return {
+        "permission": "read-only"
+    }
