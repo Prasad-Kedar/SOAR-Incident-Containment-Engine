@@ -18,20 +18,26 @@ const [metrics, setMetrics] = useState({
 });
 
 
+const [recentAlerts, setRecentAlerts] = useState([]);
+
+
 useEffect(() => {
-  async function loadMetrics() {
+  async function loadData() {
     try {
-      const data = await getSecurityMetrics();
-      console.log(data)
-      setMetrics(data);
+      const metricsData = await getSecurityMetrics();
+      setMetrics(metricsData);
+
+      const alertsData = await getRecentAlerts();
+      
+      setRecentAlerts(alertsData);
+
     } catch (error) {
       console.error(error);
     }
   }
 
-  loadMetrics();
+  loadData();
 }, []);
-
   return (
     <div className="dashboard">
       <Sidebar />
@@ -78,29 +84,18 @@ useEffect(() => {
           <th>Status</th>
         </tr>
       </thead>
+<tbody>
+  {recentAlerts.map((alert) => (
+    <tr key={alert.id}>
+      <td>{alert.id}</td>
+      <td>{alert.src_ip}</td>
+      <td>{alert.severity}</td>
+      <td>{alert.status}</td>
+    </tr>
+  ))}
 
-      <tbody>
-        <tr>
-          <td>ALT-001</td>
-          <td>Firewall</td>
-          <td><span className="critical">Critical</span></td>
-          <td><span className="open">Open</span></td>
-        </tr>
 
-        <tr>
-          <td>ALT-002</td>
-          <td>SIEM</td>
-          <td><span className="high">High</span></td>
-          <td><span className="progress">In Progress</span></td>
-        </tr>
-
-        <tr>
-          <td>ALT-003</td>
-          <td>IDS</td>
-          <td><span className="medium">Medium</span></td>
-          <td><span className="closed">Closed</span></td>
-        </tr>
-      </tbody>
+</tbody>
 
     </table>
 
