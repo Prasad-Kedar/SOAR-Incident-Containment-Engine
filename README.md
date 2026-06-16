@@ -417,24 +417,38 @@ python Backend/main.py
 
 The SOAR platform automates incident handling from alert ingestion to final closure.
 
-# Incident Response Workflow
+## Incident Response Workflow
 
-Detection
-    |
-    v
-Analysis
-    |
-    v
-Containment
-    |
-    v
-Eradication
-    |
-    v
-Recovery
-    |
-    v
-Lessons Learned
+```text
++-----------+
+| Detection |
++-----------+
+      |
+      v
++----------+
+| Analysis |
++----------+
+      |
+      v
++-------------+
+| Containment |
++-------------+
+      |
+      v
++-------------+
+| Eradication |
++-------------+
+      |
+      v
++----------+
+| Recovery |
++----------+
+      |
+      v
++-----------------+
+| Lessons Learned |
++-----------------+
+```
 
  Description
 
