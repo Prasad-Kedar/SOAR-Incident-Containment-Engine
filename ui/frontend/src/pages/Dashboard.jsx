@@ -3,7 +3,10 @@ import "../styles/dashboard.css";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
-import { getSecurityMetrics } from "../services/dashboardService";
+import {
+  getSecurityMetrics,
+  getRecentAlerts,
+} from "../services/dashboardService";
 
 function Dashboard() {
 
@@ -19,6 +22,7 @@ useEffect(() => {
   async function loadMetrics() {
     try {
       const data = await getSecurityMetrics();
+      console.log(data)
       setMetrics(data);
     } catch (error) {
       console.error(error);
