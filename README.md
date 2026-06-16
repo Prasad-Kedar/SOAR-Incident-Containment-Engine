@@ -245,15 +245,16 @@ https://youtu.be/VqMqUd9eYB8?si=RdB9dlTFJiotBA5b
 ---
 ## Project Structure
 
+```text
 SOAR-Incident-Containment-Engine/
-├── api/          # API endpoints and request handling
-├── services/     # Core business logic and automation services
-├── database/     # Database models and data management
-├── tests/        # Unit and integration tests
-├── docs/         # Project documentation and diagrams
-├── ui/           # User interface and dashboard components
-└── README.md     # Project overview and setup instructions
-
+├── api/        # API endpoints and request handling
+├── services/   # Core business logic and automation services
+├── database/   # Database models and data management
+├── tests/      # Unit and integration tests
+├── docs/       # Project documentation and diagrams
+├── ui/         # User interface and dashboard components
+└── README.md   # Project overview and setup instructions
+```
 ## Features
 
 - Automated incident containment workflows
