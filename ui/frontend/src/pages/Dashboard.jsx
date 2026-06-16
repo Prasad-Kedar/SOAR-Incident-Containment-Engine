@@ -1,9 +1,43 @@
+import { useEffect, useState } from "react";
 import "../styles/dashboard.css";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
+import {
+  getSecurityMetrics,
+  getRecentAlerts,
+} from "../services/dashboardService";
 
 function Dashboard() {
+
+const [metrics, setMetrics] = useState({
+  total_alerts: 0,
+  open_incidents: 0,
+  closed_incidents: 0,
+  high_risk_incidents: 0,
+});
+
+
+const [recentAlerts, setRecentAlerts] = useState([]);
+
+
+useEffect(() => {
+  async function loadData() {
+    try {
+      const metricsData = await getSecurityMetrics();
+      setMetrics(metricsData);
+
+      const alertsData = await getRecentAlerts();
+      
+      setRecentAlerts(alertsData);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  loadData();
+}, []);
   return (
     <div className="dashboard">
       <Sidebar />
@@ -12,10 +46,25 @@ function Dashboard() {
         <Header />
 
         <div className="cards">
-          <DashboardCard title="Total Alerts" value="120" />
-          <DashboardCard title="Open Cases" value="18" />
-          <DashboardCard title="Critical Alerts" value="9" />
-          <DashboardCard title="Resolved Cases" value="102" />
+         <DashboardCard
+  title="Total Alerts"
+  value={metrics.total_alerts}
+/>
+
+<DashboardCard
+  title="Open Incidents"
+  value={metrics.open_incidents}
+/>
+
+<DashboardCard
+  title="High Risk Incidents"
+  value={metrics.high_risk_incidents}
+/>
+
+<DashboardCard
+  title="Closed Incidents"
+  value={metrics.closed_incidents}
+/>
         </div>
 
 
@@ -35,29 +84,18 @@ function Dashboard() {
           <th>Status</th>
         </tr>
       </thead>
+<tbody>
+  {recentAlerts.map((alert) => (
+    <tr key={alert.id}>
+      <td>{alert.id}</td>
+      <td>{alert.src_ip}</td>
+      <td>{alert.severity}</td>
+      <td>{alert.status}</td>
+    </tr>
+  ))}
 
-      <tbody>
-        <tr>
-          <td>ALT-001</td>
-          <td>Firewall</td>
-          <td><span className="critical">Critical</span></td>
-          <td><span className="open">Open</span></td>
-        </tr>
 
-        <tr>
-          <td>ALT-002</td>
-          <td>SIEM</td>
-          <td><span className="high">High</span></td>
-          <td><span className="progress">In Progress</span></td>
-        </tr>
-
-        <tr>
-          <td>ALT-003</td>
-          <td>IDS</td>
-          <td><span className="medium">Medium</span></td>
-          <td><span className="closed">Closed</span></td>
-        </tr>
-      </tbody>
+</tbody>
 
     </table>
 
