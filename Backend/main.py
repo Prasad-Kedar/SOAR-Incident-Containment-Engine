@@ -661,3 +661,27 @@ def severity_report():
         "medium": medium,
         "low": low
     }
+
+@app.get("/reports/analysts")
+def analyst_report():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).all()
+
+    report = {}
+
+    for incident in incidents:
+
+        analyst = incident.assigned_to
+
+        if analyst:
+
+            report[analyst] = report.get(
+                analyst,
+                0
+            ) + 1
+
+    db.close()
+
+    return report
