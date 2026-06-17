@@ -21,6 +21,7 @@ const [metrics, setMetrics] = useState({
 const [recentAlerts, setRecentAlerts] = useState([]);
 
 const [trends, setTrends] = useState({
+  critical: 0,
   high: 0,
   medium: 0,
   low: 0,
@@ -38,6 +39,7 @@ useEffect(() => {
       setRecentAlerts(alertsData);
 
       const trendsData = await getIncidentTrends();
+      console.log("Trends API:", trendsData);
 setTrends(trendsData);
 
     } catch (error) {
@@ -169,7 +171,7 @@ setTrends(trendsData);
       <div className="severity-bar">
         <div className="severity-fill critical-fill" style={{ width: "80%" }}></div>
       </div>
-      <span>9</span>
+     <span>{trends.critical}</span>
     </div>
 
     <div className="severity-row">
