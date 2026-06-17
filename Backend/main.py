@@ -613,3 +613,75 @@ def check_role(role: str):
     return {
         "permission": "read-only"
     }
+
+@app.get("/reports/incidents")
+def incident_report():
+
+    db = SessionLocal()
+
+    total = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_incidents": total,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents
+    }
+
+@app.get("/reports/severity")
+def severity_report():
+
+    db = SessionLocal()
+
+    high = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    medium = db.query(AlertDB).filter(
+        AlertDB.severity == "medium"
+    ).count()
+
+    low = db.query(AlertDB).filter(
+        AlertDB.severity == "low"
+    ).count()
+
+    db.close()
+
+    return {
+        "high": high,
+        "medium": medium,
+        "low": low
+    }
+
+@app.get("/reports/analysts")
+def analyst_report():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).all()
+
+    report = {}
+
+    for incident in incidents:
+
+        analyst = incident.assigned_to
+
+        if analyst:
+
+            report[analyst] = report.get(
+                analyst,
+                0
+            ) + 1
+
+    db.close()
+
+    return report
