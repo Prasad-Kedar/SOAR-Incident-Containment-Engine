@@ -39,7 +39,7 @@ useEffect(() => {
       setRecentAlerts(alertsData);
 
       const trendsData = await getIncidentTrends();
-      console.log("Trends API:", trendsData);
+     
 setTrends(trendsData);
 
     } catch (error) {
