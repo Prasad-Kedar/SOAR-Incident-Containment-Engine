@@ -613,3 +613,26 @@ def check_role(role: str):
     return {
         "permission": "read-only"
     }
+
+@app.get("/reports/incidents")
+def incident_report():
+
+    db = SessionLocal()
+
+    total = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_incidents": total,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents
+    }
