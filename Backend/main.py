@@ -1,4 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 from fastapi import FastAPI
 from models import Alert
 from datetime import datetime
@@ -17,6 +19,13 @@ from jose import jwt
 from models_db import User
 
 app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 app.add_middleware(
     CORSMiddleware,
@@ -104,15 +113,15 @@ def dashboard_summary():
     total_alerts = db.query(AlertDB).count()
 
     high_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "high"
+        AlertDB.severity == "HIGH"
     ).count()
 
     medium_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "medium"
+        AlertDB.severity == "MEDIUM"
     ).count()
 
     low_alerts = db.query(AlertDB).filter(
-        AlertDB.severity == "low"
+        AlertDB.severity == "LOW"
     ).count()
 
     db.close()
@@ -123,7 +132,6 @@ def dashboard_summary():
         "medium_alerts": medium_alerts,
         "low_alerts": low_alerts
     }
-
 
 @app.get("/dashboard/recent")
 def recent_alerts():
@@ -201,7 +209,7 @@ def high_risk_incidents():
     db = SessionLocal()
 
     incidents = db.query(AlertDB).filter(
-        AlertDB.severity == "high"
+        AlertDB.severity == "HIGH"
     ).all()
 
     result = []
@@ -299,7 +307,7 @@ def security_metrics():
     ).count()
 
     high_risk = db.query(AlertDB).filter(
-        AlertDB.severity == "high"
+        AlertDB.severity == "HIGH"
     ).count()
 
     db.close()
@@ -339,21 +347,26 @@ def incident_trends():
 
     db = SessionLocal()
 
+    critical_count = db.query(AlertDB).filter(
+        AlertDB.severity == "CRITICAL"
+    ).count()
+
     high_count = db.query(AlertDB).filter(
-        AlertDB.severity == "high"
+        AlertDB.severity == "HIGH"
     ).count()
 
     medium_count = db.query(AlertDB).filter(
-        AlertDB.severity == "medium"
+        AlertDB.severity == "MEDIUM"
     ).count()
 
     low_count = db.query(AlertDB).filter(
-        AlertDB.severity == "low"
+        AlertDB.severity == "LOW"
     ).count()
 
     db.close()
 
     return {
+        "critical": critical_count,
         "high": high_count,
         "medium": medium_count,
         "low": low_count
@@ -637,33 +650,28 @@ def incident_report():
         "closed_incidents": closed_incidents
     }
 @app.get("/reports/severity")
-def severity_report():
+def get_severity_report(db: Session = Depends(get_db)):
 
-    db = SessionLocal()
+    alerts = db.query(AlertDB.severity).all()
 
-    critical = db.query(AlertDB).filter(
-        AlertDB.severity == "critical"
-    ).count()
+    counts = {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "MEDIUM": 0,
+        "LOW": 0
+    }
 
-    high = db.query(AlertDB).filter(
-        AlertDB.severity == "high"
-    ).count()
-
-    medium = db.query(AlertDB).filter(
-        AlertDB.severity == "medium"
-    ).count()
-
-    low = db.query(AlertDB).filter(
-        AlertDB.severity == "low"
-    ).count()
-
-    db.close()
+    for (severity,) in alerts:
+        if severity:
+            key = severity.strip().upper()
+            if key in counts:
+                counts[key] += 1
 
     return {
-        "critical": critical,
-        "high": high,
-        "medium": medium,
-        "low": low
+        "critical": counts["CRITICAL"],
+        "high": counts["HIGH"],
+        "medium": counts["MEDIUM"],
+        "low": counts["LOW"]
     }
 
 @app.get("/reports/analysts")
