@@ -636,3 +636,28 @@ def incident_report():
         "open_incidents": open_incidents,
         "closed_incidents": closed_incidents
     }
+
+@app.get("/reports/severity")
+def severity_report():
+
+    db = SessionLocal()
+
+    high = db.query(AlertDB).filter(
+        AlertDB.severity == "high"
+    ).count()
+
+    medium = db.query(AlertDB).filter(
+        AlertDB.severity == "medium"
+    ).count()
+
+    low = db.query(AlertDB).filter(
+        AlertDB.severity == "low"
+    ).count()
+
+    db.close()
+
+    return {
+        "high": high,
+        "medium": medium,
+        "low": low
+    }
