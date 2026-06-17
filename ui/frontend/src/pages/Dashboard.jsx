@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
 import {
   getSecurityMetrics,
-  getRecentAlerts,
+  getRecentAlerts, getIncidentTrends,
 } from "../services/dashboardService";
 
 function Dashboard() {
@@ -20,6 +20,12 @@ const [metrics, setMetrics] = useState({
 
 const [recentAlerts, setRecentAlerts] = useState([]);
 
+const [trends, setTrends] = useState({
+  high: 0,
+  medium: 0,
+  low: 0,
+});
+
 
 useEffect(() => {
   async function loadData() {
@@ -30,6 +36,9 @@ useEffect(() => {
       const alertsData = await getRecentAlerts();
       
       setRecentAlerts(alertsData);
+
+      const trendsData = await getIncidentTrends();
+setTrends(trendsData);
 
     } catch (error) {
       console.error(error);
@@ -168,7 +177,7 @@ useEffect(() => {
       <div className="severity-bar">
         <div className="severity-fill high-fill" style={{ width: "60%" }}></div>
       </div>
-      <span>15</span>
+     <span>{trends.high}</span>
     </div>
 
     <div className="severity-row">
@@ -176,7 +185,7 @@ useEffect(() => {
       <div className="severity-bar">
         <div className="severity-fill medium-fill" style={{ width: "40%" }}></div>
       </div>
-      <span>28</span>
+      <span>{trends.medium}</span>
     </div>
 
     <div className="severity-row">
@@ -184,7 +193,7 @@ useEffect(() => {
       <div className="severity-bar">
         <div className="severity-fill low-fill" style={{ width: "20%" }}></div>
       </div>
-      <span>12</span>
+    <span>{trends.low}</span>
     </div>
 
   </div>
