@@ -49,6 +49,16 @@ setTrends(trendsData);
 
   loadData();
 }, []);
+
+const maxTrend = Math.max(
+  trends.critical,
+  trends.high,
+  trends.medium,
+  trends.low,
+  1
+);
+
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -169,7 +179,7 @@ setTrends(trendsData);
     <div className="severity-row">
       <span className="severity-label critical">Critical</span>
       <div className="severity-bar">
-        <div className="severity-fill critical-fill" style={{ width: "80%" }}></div>
+        <div className="severity-fill critical-fill" style={{ width: `${(trends.critical / maxTrend) * 100}%`, }}></div>
       </div>
      <span>{trends.critical}</span>
     </div>
@@ -177,7 +187,7 @@ setTrends(trendsData);
     <div className="severity-row">
       <span className="severity-label high">High</span>
       <div className="severity-bar">
-        <div className="severity-fill high-fill" style={{ width: "60%" }}></div>
+        <div className="severity-fill high-fill" style={{  width: `${(trends.high / maxTrend) * 100}%`, }}></div>
       </div>
      <span>{trends.high}</span>
     </div>
@@ -185,7 +195,7 @@ setTrends(trendsData);
     <div className="severity-row">
       <span className="severity-label medium">Medium</span>
       <div className="severity-bar">
-        <div className="severity-fill medium-fill" style={{ width: "40%" }}></div>
+        <div className="severity-fill medium-fill" style={{  width: `${(trends.medium / maxTrend) * 100}%`, }}></div>
       </div>
       <span>{trends.medium}</span>
     </div>
@@ -193,7 +203,7 @@ setTrends(trendsData);
     <div className="severity-row">
       <span className="severity-label low">Low</span>
       <div className="severity-bar">
-        <div className="severity-fill low-fill" style={{ width: "20%" }}></div>
+        <div className="severity-fill low-fill" style={{ width: `${(trends.low / maxTrend) * 100}%`, }}></div>
       </div>
     <span>{trends.low}</span>
     </div>
