@@ -154,8 +154,9 @@ def recent_alerts():
             "severity": alert.severity,
             "event_type": alert.event_type,
             "timestamp": alert.timestamp,
-            "status": alert.status
-        })
+            "status": alert.status,
+            "assigned_to": alert.assigned_to
+})
 
     db.close()
 
@@ -695,6 +696,7 @@ def analyst_report():
             ) + 1
 
     db.close()
+    return report
 
 @app.get("/ioc/{ip}")
 def search_ioc(ip: str):
@@ -757,3 +759,26 @@ def threat_stats():
         "malicious": malicious,
         "safe": safe
     }
+
+@app.get("/dashboard/recent-cases")
+def get_recent_cases():
+    return [
+        {
+            "case_id": "CASE-001",
+            "assigned_to": "Analyst 1",
+            "priority": "Critical",
+            "status": "Open"
+        },
+        {
+            "case_id": "CASE-002",
+            "assigned_to": "Analyst 2",
+            "priority": "High",
+            "status": "In Progress"
+        },
+        {
+            "case_id": "CASE-003",
+            "assigned_to": "Analyst 3",
+            "priority": "Medium",
+            "status": "Closed"
+        }
+    ]
