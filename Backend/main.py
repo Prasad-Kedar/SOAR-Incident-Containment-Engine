@@ -706,3 +706,28 @@ def search_ioc(ip: str):
         "risk_score": intel["risk_score"],
         "threat": intel["threat"]
     }
+
+@app.get("/threats/malicious")
+def malicious_alerts():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    result = []
+
+    for alert in alerts:
+
+        intel = check_ip(alert.src_ip)
+
+        if intel["threat"]:
+
+            result.append({
+                "id": alert.id,
+                "src_ip": alert.src_ip,
+                "risk_score": intel["risk_score"]
+            })
+
+    db.close()
+
+    return result
