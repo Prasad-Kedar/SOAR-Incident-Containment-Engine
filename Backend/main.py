@@ -696,4 +696,13 @@ def analyst_report():
 
     db.close()
 
-    return report
+@app.get("/ioc/{ip}")
+def search_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
