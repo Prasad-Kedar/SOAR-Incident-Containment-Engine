@@ -696,4 +696,64 @@ def analyst_report():
 
     db.close()
 
-    return report
+@app.get("/ioc/{ip}")
+def search_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+@app.get("/threats/malicious")
+def malicious_alerts():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    result = []
+
+    for alert in alerts:
+
+        intel = check_ip(alert.src_ip)
+
+        if intel["threat"]:
+
+            result.append({
+                "id": alert.id,
+                "src_ip": alert.src_ip,
+                "risk_score": intel["risk_score"]
+            })
+
+    db.close()
+
+    return result
+
+@app.get("/threats/stats")
+def threat_stats():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    malicious = 0
+    safe = 0
+
+    for alert in alerts:
+
+        intel = check_ip(alert.src_ip)
+
+        if intel["threat"]:
+            malicious += 1
+        else:
+            safe += 1
+
+    db.close()
+
+    return {
+        "malicious": malicious,
+        "safe": safe
+    }
