@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
 import {
   getSecurityMetrics,
-  getRecentAlerts, getIncidentTrends,
+  getRecentAlerts, getIncidentTrends,getRecentCases,
 } from "../services/dashboardService";
 
 function Dashboard() {
@@ -19,6 +19,7 @@ const [metrics, setMetrics] = useState({
 
 
 const [recentAlerts, setRecentAlerts] = useState([]);
+const [recentCases, setRecentCases] = useState([]);
 
 const [trends, setTrends] = useState({
   critical: 0,
@@ -39,8 +40,11 @@ useEffect(() => {
       setRecentAlerts(alertsData);
 
       const trendsData = await getIncidentTrends();
-     
-setTrends(trendsData);
+     setTrends(trendsData);
+
+
+const casesData = await getRecentCases();
+setRecentCases(casesData);
 
     } catch (error) {
       console.error(error);
@@ -138,27 +142,15 @@ const maxTrend = Math.max(
       </thead>
 
       <tbody>
-        <tr>
-          <td>CASE-001</td>
-          <td>Analyst 1</td>
-          <td><span className="critical">Critical</span></td>
-          <td><span className="open">Open</span></td>
-        </tr>
-
-        <tr>
-          <td>CASE-002</td>
-          <td>Analyst 2</td>
-          <td><span className="high">High</span></td>
-          <td><span className="progress">In Progress</span></td>
-        </tr>
-
-        <tr>
-          <td>CASE-003</td>
-          <td>Analyst 3</td>
-          <td><span className="medium">Medium</span></td>
-          <td><span className="closed">Closed</span></td>
-        </tr>
-      </tbody>
+  {recentCases.map((item) => (
+    <tr key={item.case_id}>
+      <td>{item.case_id}</td>
+      <td>{item.assigned_to}</td>
+      <td>{item.priority}</td>
+      <td>{item.status}</td>
+    </tr>
+  ))}
+</tbody>
 
     </table>
 

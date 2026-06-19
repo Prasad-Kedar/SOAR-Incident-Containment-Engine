@@ -35,3 +35,16 @@ export async function getIncidentTrends() {
 
   return response.json();
 }
+
+
+export async function getRecentCases() {
+  const response = await fetch(
+    `${BASE_URL}/dashboard/recent-cases`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch recent cases");
+  }
+
+  return response.json();
+}
