@@ -782,3 +782,13 @@ def get_recent_cases():
             "status": "Closed"
         }
     ]
+
+@app.get("/threat-feed")
+def threat_feed():
+
+    return {
+        "malicious_ips": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    }
