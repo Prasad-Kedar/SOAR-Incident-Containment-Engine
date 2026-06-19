@@ -792,3 +792,15 @@ def threat_feed():
             "1.1.1.1"
         ]
     }
+
+@app.get("/threat-feed/stats")
+def threat_feed_stats():
+
+    feed = [
+        "8.8.8.8",
+        "1.1.1.1"
+    ]
+
+    return {
+        "total_iocs": len(feed)
+    }
