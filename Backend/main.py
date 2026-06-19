@@ -804,3 +804,13 @@ def threat_feed_stats():
     return {
         "total_iocs": len(feed)
     }
+
+@app.get("/ioc/check/{ip}")
+def verify_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "malicious": intel["threat"]
+    }
