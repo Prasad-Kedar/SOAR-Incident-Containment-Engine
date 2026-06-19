@@ -782,3 +782,35 @@ def get_recent_cases():
             "status": "Closed"
         }
     ]
+
+@app.get("/threat-feed")
+def threat_feed():
+
+    return {
+        "malicious_ips": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    }
+
+@app.get("/threat-feed/stats")
+def threat_feed_stats():
+
+    feed = [
+        "8.8.8.8",
+        "1.1.1.1"
+    ]
+
+    return {
+        "total_iocs": len(feed)
+    }
+
+@app.get("/ioc/check/{ip}")
+def verify_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "malicious": intel["threat"]
+    }
