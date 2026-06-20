@@ -1,0 +1,31 @@
+Observation:
+
+The escalation endpoint successfully handled an invalid incident ID without causing a server error.
+
+However, the endpoint escalated incident ID 999 without validating whether the incident exists in the database.
+
+Result:
+No application crash occurred, but additional validation can be implemented in future improvements.
+
+
+--------------------------------------------------------------------------------------------------
+
+Observation:
+
+The Block IP endpoint returned a successful response for a non-existing incident ID.
+
+The API did not crash and responded correctly, but incident existence validation is currently missing.
+
+Suggested Improvement:
+Verify incident existence before performing response actions.
+
+----------------------------------------------------------------------------------------------------
+
+During validation testing, response action endpoints (block-ip and isolate-host) were accepting non-existing incident IDs. Incident existence validation was implemented and verified successfully.
+
+----------------------------------------------------------------------------------------------------
+The IOC lookup endpoint was tested using an invalid IP value (abc). The API handled the input gracefully and returned a valid response without causing any server errors or application crashes.
+
+---------------------------------------------------------------------------------------------------
+Reviewed backend initialization code and removed temporary debug print statements used during development.
+---------------------------------------------------------------------------------------------------
