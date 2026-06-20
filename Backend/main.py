@@ -1,0 +1,847 @@
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from models import Alert
+from datetime import datetime
+from db_session import SessionLocal
+from models_db import ResponseAction
+from models_db import (
+    AlertDB,
+    ResponseAction,
+    NotificationLog,
+    Analyst,
+    AuditLog
+)
+from normalizer import normalize_alert
+from threat_intel import check_ip
+from jose import jwt
+from models_db import User
+
+app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+SECRET_KEY = "soar-secret-key"
+
+@app.get("/")
+def home():
+    return {
+        "message": "SOAR Incident Containment Engine API Running"
+    }
+
+
+@app.post("/alerts")
+def receive_alert(alert: Alert):
+
+    normalized = normalize_alert(alert)
+
+    intel = check_ip(normalized["src_ip"])
+
+    risk_score = intel["risk_score"]
+    threat = intel["threat"]
+
+    db = SessionLocal()
+
+    new_alert = AlertDB(
+        src_ip=normalized["src_ip"],
+        severity=normalized["severity"],
+        event_type=normalized["event_type"],
+        timestamp=normalized["timestamp"],
+        status="OPEN"
+    )
+
+    db.add(new_alert)
+    db.commit()
+    db.refresh(new_alert)
+
+    db.close()
+
+    return {
+        "status": "success",
+        "message": "Alert stored successfully",
+        "risk_score": risk_score,
+        "threat": threat
+    }
+
+
+@app.get("/alerts")
+def get_alerts():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    result = []
+
+    for alert in alerts:
+        result.append({
+            "id": alert.id,
+            "src_ip": alert.src_ip,
+            "severity": alert.severity,
+            "event_type": alert.event_type,
+            "timestamp": alert.timestamp,
+            "status": alert.status
+        })
+
+    db.close()
+
+    return result
+
+
+@app.get("/dashboard/summary")
+def dashboard_summary():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    high_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "HIGH"
+    ).count()
+
+    medium_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "MEDIUM"
+    ).count()
+
+    low_alerts = db.query(AlertDB).filter(
+        AlertDB.severity == "LOW"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "high_alerts": high_alerts,
+        "medium_alerts": medium_alerts,
+        "low_alerts": low_alerts
+    }
+
+@app.get("/dashboard/recent")
+def recent_alerts():
+
+    db = SessionLocal()
+
+    alerts = (
+        db.query(AlertDB)
+        .order_by(AlertDB.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    result = []
+
+    for alert in alerts:
+        result.append({
+            "id": alert.id,
+            "src_ip": alert.src_ip,
+            "severity": alert.severity,
+            "event_type": alert.event_type,
+            "timestamp": alert.timestamp,
+            "status": alert.status,
+            "assigned_to": alert.assigned_to
+})
+
+    db.close()
+
+    return result
+
+
+@app.get("/threat/{ip}")
+def threat_lookup(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incident/{incident_id}/intel")
+def incident_intel(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+
+    intel = check_ip(
+        incident.src_ip
+    )
+
+    db.close()
+
+    return {
+        "incident_id": incident.id,
+        "src_ip": incident.src_ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+
+@app.get("/incidents/high-risk")
+def high_risk_incidents():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.severity == "HIGH"
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "severity": incident.severity,
+            "status": incident.status
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/response/block-ip/{incident_id}")
+def block_ip(incident_id: int):
+
+    db = SessionLocal()
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="BLOCK_IP",
+        status="SUCCESS",
+        timestamp=datetime.now()
+    )
+
+    db.add(action)
+    db.commit()
+    db.close()
+
+    return {
+        "message": "IP blocked successfully"
+    }
+
+@app.post("/response/isolate-host/{incident_id}")
+def isolate_host(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+    action = ResponseAction(
+        incident_id=incident_id,
+        action_type="ISOLATE_HOST",
+        status="SUCCESS",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(action)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Host isolated successfully"
+    }
+
+@app.get("/responses")
+def response_history():
+
+    db = SessionLocal()
+
+    actions = db.query(ResponseAction).all()
+
+    result = []
+
+    for action in actions:
+
+        result.append({
+            "id": action.id,
+            "incident_id": action.incident_id,
+            "action_type": action.action_type,
+            "status": action.status,
+            "timestamp": action.timestamp
+        })
+
+    db.close()
+
+    return result
+
+@app.get("/dashboard/security-metrics")
+def security_metrics():
+
+    db = SessionLocal()
+
+    total_alerts = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    high_risk = db.query(AlertDB).filter(
+        AlertDB.severity == "HIGH"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_alerts": total_alerts,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents,
+        "high_risk_incidents": high_risk
+    }
+
+@app.get("/dashboard/response-metrics")
+def response_metrics():
+
+    db = SessionLocal()
+
+    total_actions = db.query(ResponseAction).count()
+
+    blocked_ips = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "BLOCK_IP"
+    ).count()
+
+    isolated_hosts = db.query(ResponseAction).filter(
+        ResponseAction.action_type == "ISOLATE_HOST"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_actions": total_actions,
+        "blocked_ips": blocked_ips,
+        "isolated_hosts": isolated_hosts
+    }
+
+@app.get("/dashboard/trends")
+def incident_trends():
+
+    db = SessionLocal()
+
+    critical_count = db.query(AlertDB).filter(
+        AlertDB.severity == "CRITICAL"
+    ).count()
+
+    high_count = db.query(AlertDB).filter(
+        AlertDB.severity == "HIGH"
+    ).count()
+
+    medium_count = db.query(AlertDB).filter(
+        AlertDB.severity == "MEDIUM"
+    ).count()
+
+    low_count = db.query(AlertDB).filter(
+        AlertDB.severity == "LOW"
+    ).count()
+
+    db.close()
+
+    return {
+        "critical": critical_count,
+        "high": high_count,
+        "medium": medium_count,
+        "low": low_count
+    }
+
+@app.post("/notify/{incident_id}")
+def notify_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    notification = NotificationLog(
+        incident_id=incident_id,
+        notification_type="EMAIL",
+        recipient="soc-team@company.local",
+        status="SENT",
+        timestamp=str(datetime.now())
+    )
+
+    db.add(notification)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Notification sent successfully"
+    }
+
+@app.post("/incident/{incident_id}/escalate")
+def escalate_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+
+    db.close()
+
+    return {
+        "incident_id": incident_id,
+        "status": "ESCALATED",
+        "assigned_team": "SOC-L2"
+    }
+
+@app.get("/notifications")
+def get_notifications():
+
+    db = SessionLocal()
+
+    notifications = db.query(
+        NotificationLog
+    ).all()
+
+    result = []
+
+    for n in notifications:
+
+        result.append({
+            "id": n.id,
+            "incident_id": n.incident_id,
+            "recipient": n.recipient,
+            "status": n.status,
+            "timestamp": n.timestamp
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/analysts")
+def create_analyst():
+
+    try:
+        db = SessionLocal()
+
+        analyst = Analyst(
+            name="Prasad",
+            email="Prasad@soc.local",
+            role="SOC Analyst"
+        )
+
+        db.add(analyst)
+        db.commit()
+        db.close()
+
+        return {
+            "message": "Analyst created successfully"
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+
+
+@app.put("/incident/{incident_id}/assign/{analyst_name}")
+def assign_incident(
+    incident_id: int,
+    analyst_name: str
+):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+
+        return {
+            "message": "Incident not found"
+        }
+
+    incident.assigned_to = analyst_name
+
+    db.commit()
+    db.close()
+
+    return {
+        "message": "Incident assigned",
+        "analyst": analyst_name
+    }
+
+@app.get("/analyst/{name}/incidents")
+def analyst_incidents(name: str):
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).filter(
+        AlertDB.assigned_to == name
+    ).all()
+
+    result = []
+
+    for incident in incidents:
+
+        result.append({
+            "id": incident.id,
+            "src_ip": incident.src_ip,
+            "status": incident.status,
+            "severity": incident.severity
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/audit/log")
+def create_audit_log():
+
+    db = SessionLocal()
+
+    log = AuditLog(
+        analyst="Prasad",
+        action="Assigned Incident",
+        incident_id=1,
+        timestamp=str(datetime.now())
+    )
+
+    db.add(log)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "Audit log created"
+    }
+
+@app.get("/audit/logs")
+def get_audit_logs():
+
+    db = SessionLocal()
+
+    logs = db.query(AuditLog).all()
+
+    result = []
+
+    for log in logs:
+
+        result.append({
+            "id": log.id,
+            "analyst": log.analyst,
+            "action": log.action,
+            "incident_id": log.incident_id,
+            "timestamp": log.timestamp
+        })
+
+    db.close()
+
+    return result
+
+@app.post("/users")
+def create_user():
+
+    db = SessionLocal()
+
+    user = User(
+        username="admin",
+        password="admin123",
+        role="SOC_ADMIN"
+    )
+
+    db.add(user)
+
+    db.commit()
+
+    db.close()
+
+    return {
+        "message": "User created successfully"
+    }
+
+@app.post("/login")
+def login():
+
+    token = jwt.encode(
+        {"user": "admin"},
+        SECRET_KEY,
+        algorithm="HS256"
+    )
+
+    return {
+        "access_token": token
+    }
+
+@app.get("/secure/dashboard")
+def secure_dashboard():
+
+    return {
+        "message": "Authorized Access"
+    }
+
+@app.get("/admin/dashboard")
+def admin_dashboard():
+
+    return {
+        "role": "SOC_ADMIN",
+        "message": "Admin Dashboard Access Granted"
+    }
+
+@app.get("/analyst/dashboard")
+def analyst_dashboard():
+
+    return {
+        "role": "SOC_ANALYST",
+        "message": "Analyst Dashboard Access Granted"
+    }
+
+@app.get("/role/{role}")
+def check_role(role: str):
+
+    if role == "SOC_ADMIN":
+        return {
+            "permission": "full-access"
+        }
+
+    if role == "SOC_ANALYST":
+        return {
+            "permission": "incident-management"
+        }
+
+    return {
+        "permission": "read-only"
+    }
+
+@app.get("/reports/incidents")
+def incident_report():
+
+    db = SessionLocal()
+
+    total = db.query(AlertDB).count()
+
+    open_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "OPEN"
+    ).count()
+
+    closed_incidents = db.query(AlertDB).filter(
+        AlertDB.status == "CLOSED"
+    ).count()
+
+    db.close()
+
+    return {
+        "total_incidents": total,
+        "open_incidents": open_incidents,
+        "closed_incidents": closed_incidents
+    }
+@app.get("/reports/severity")
+def get_severity_report(db: Session = Depends(get_db)):
+
+    alerts = db.query(AlertDB.severity).all()
+
+    counts = {
+        "CRITICAL": 0,
+        "HIGH": 0,
+        "MEDIUM": 0,
+        "LOW": 0
+    }
+
+    for (severity,) in alerts:
+        if severity:
+            key = severity.strip().upper()
+            if key in counts:
+                counts[key] += 1
+
+    return {
+        "critical": counts["CRITICAL"],
+        "high": counts["HIGH"],
+        "medium": counts["MEDIUM"],
+        "low": counts["LOW"]
+    }
+
+@app.get("/reports/analysts")
+def analyst_report():
+
+    db = SessionLocal()
+
+    incidents = db.query(AlertDB).all()
+
+    report = {}
+
+    for incident in incidents:
+
+        analyst = incident.assigned_to
+
+        if analyst:
+
+            report[analyst] = report.get(
+                analyst,
+                0
+            ) + 1
+
+    db.close()
+    return report
+
+@app.get("/ioc/{ip}")
+def search_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "risk_score": intel["risk_score"],
+        "threat": intel["threat"]
+    }
+
+@app.get("/threats/malicious")
+def malicious_alerts():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    result = []
+
+    for alert in alerts:
+
+        intel = check_ip(alert.src_ip)
+
+        if intel["threat"]:
+
+            result.append({
+                "id": alert.id,
+                "src_ip": alert.src_ip,
+                "risk_score": intel["risk_score"]
+            })
+
+    db.close()
+
+    return result
+
+@app.get("/threats/stats")
+def threat_stats():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    malicious = 0
+    safe = 0
+
+    for alert in alerts:
+
+        intel = check_ip(alert.src_ip)
+
+        if intel["threat"]:
+            malicious += 1
+        else:
+            safe += 1
+
+    db.close()
+
+    return {
+        "malicious": malicious,
+        "safe": safe
+    }
+
+@app.get("/dashboard/recent-cases")
+def get_recent_cases():
+    return [
+        {
+            "case_id": "CASE-001",
+            "assigned_to": "Analyst 1",
+            "priority": "Critical",
+            "status": "Open"
+        },
+        {
+            "case_id": "CASE-002",
+            "assigned_to": "Analyst 2",
+            "priority": "High",
+            "status": "In Progress"
+        },
+        {
+            "case_id": "CASE-003",
+            "assigned_to": "Analyst 3",
+            "priority": "Medium",
+            "status": "Closed"
+        }
+    ]
+
+@app.get("/threat-feed")
+def threat_feed():
+
+    return {
+        "malicious_ips": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    }
+
+@app.get("/threat-feed/stats")
+def threat_feed_stats():
+
+    feed = [
+        "8.8.8.8",
+        "1.1.1.1"
+    ]
+
+    return {
+        "total_iocs": len(feed)
+    }
+
+@app.get("/ioc/check/{ip}")
+def verify_ioc(ip: str):
+
+    intel = check_ip(ip)
+
+    return {
+        "ip": ip,
+        "malicious": intel["threat"]
+    }
