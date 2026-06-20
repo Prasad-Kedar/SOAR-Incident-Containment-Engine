@@ -22,3 +22,10 @@ Verify incident existence before performing response actions.
 ----------------------------------------------------------------------------------------------------
 
 During validation testing, response action endpoints (block-ip and isolate-host) were accepting non-existing incident IDs. Incident existence validation was implemented and verified successfully.
+
+----------------------------------------------------------------------------------------------------
+The IOC lookup endpoint was tested using an invalid IP value (abc). The API handled the input gracefully and returned a valid response without causing any server errors or application crashes.
+
+---------------------------------------------------------------------------------------------------
+Reviewed backend initialization code and removed temporary debug print statements used during development.
+---------------------------------------------------------------------------------------------------
