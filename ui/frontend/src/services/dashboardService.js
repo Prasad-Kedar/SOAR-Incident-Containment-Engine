@@ -48,3 +48,16 @@ export async function getRecentCases() {
 
   return response.json();
 }
+
+
+export async function getResponseMetrics() {
+  const response = await fetch(
+    `${BASE_URL}/dashboard/response-metrics`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch response metrics");
+  }
+
+  return response.json();
+}

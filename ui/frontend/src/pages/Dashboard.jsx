@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
 import {
   getSecurityMetrics,
-  getRecentAlerts, getIncidentTrends,getRecentCases,
+  getRecentAlerts, getIncidentTrends,getRecentCases, getResponseMetrics,
 } from "../services/dashboardService";
 
 function Dashboard() {
@@ -29,6 +29,12 @@ const [trends, setTrends] = useState({
 });
 
 
+const [responseMetrics, setResponseMetrics] = useState({
+  total_actions: 0,
+  blocked_ips: 0,
+  isolated_hosts: 0,
+});
+
 useEffect(() => {
   async function loadData() {
     try {
@@ -45,6 +51,9 @@ useEffect(() => {
 
 const casesData = await getRecentCases();
 setRecentCases(casesData);
+
+const responseData = await getResponseMetrics();
+setResponseMetrics(responseData);
 
     } catch (error) {
       console.error(error);
@@ -199,6 +208,30 @@ const maxTrend = Math.max(
       </div>
     <span>{trends.low}</span>
     </div>
+
+  </div>
+
+</div>
+<div className="dashboard-section">
+
+  <h2>Response Metrics</h2>
+
+  <div className="cards">
+
+    <DashboardCard
+      title="Total Actions"
+      value={responseMetrics.total_actions}
+    />
+
+    <DashboardCard
+      title="Blocked IPs"
+      value={responseMetrics.blocked_ips}
+    />
+
+    <DashboardCard
+      title="Isolated Hosts"
+      value={responseMetrics.isolated_hosts}
+    />
 
   </div>
 
