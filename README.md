@@ -317,7 +317,7 @@ python Backend/main.py
 # Contributors
 
 - Prasad Kedar
-- Almeen
+- Alameen
 - Nelna
 - Adarsh
   
