@@ -231,7 +231,15 @@ def high_risk_incidents():
 def block_ip(incident_id: int):
 
     db = SessionLocal()
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
 
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
     action = ResponseAction(
         incident_id=incident_id,
         action_type="BLOCK_IP",
@@ -252,6 +260,15 @@ def isolate_host(incident_id: int):
 
     db = SessionLocal()
 
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
     action = ResponseAction(
         incident_id=incident_id,
         action_type="ISOLATE_HOST",
@@ -398,6 +415,20 @@ def notify_incident(incident_id: int):
 
 @app.post("/incident/{incident_id}/escalate")
 def escalate_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(
+        AlertDB.id == incident_id
+    ).first()
+
+    if not incident:
+        db.close()
+        return {
+            "message": "Incident not found"
+        }
+
+    db.close()
 
     return {
         "incident_id": incident_id,
