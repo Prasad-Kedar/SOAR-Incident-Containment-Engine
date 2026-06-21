@@ -1,0 +1,9 @@
+Threat Feed Management
+Features
+Threat Feed API
+IOC Verification
+Threat Feed Statistics
+Workflow
+Threat Feed ↓ IOC Verification ↓ Threat Detection ↓ Incident Response
+Purpose
+Provide a centralized list of known malicious indicators and support security investigations.
