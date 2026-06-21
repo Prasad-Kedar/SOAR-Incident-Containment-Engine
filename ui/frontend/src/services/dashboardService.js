@@ -100,3 +100,34 @@ export async function getNotifications() {
 
   return response.json();
 }
+
+
+export async function getIncidentReport() {
+  const response = await fetch(`${BASE_URL}/reports/incidents`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch incident report");
+  }
+
+  return response.json();
+}
+
+export async function getSeverityReport() {
+  const response = await fetch(`${BASE_URL}/reports/severity`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch severity report");
+  }
+
+  return response.json();
+}
+
+export async function getAnalystReport() {
+  const response = await fetch(`${BASE_URL}/reports/analysts`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch analyst report");
+  }
+
+  return response.json();
+}
