@@ -10,6 +10,9 @@ function Sidebar() {
         <Link to="/">Dashboard</Link>
         <Link to="/alerts">Alerts</Link>
         <Link to="/cases">Cases</Link>
+        <Link to="/responses">Responses</Link>
+        <Link to="/notifications">Notifications</Link>
+        <Link to="/reports">Reports</Link>
       </nav>
     </div>
   );
