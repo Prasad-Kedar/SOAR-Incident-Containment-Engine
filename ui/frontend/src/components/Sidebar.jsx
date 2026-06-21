@@ -11,6 +11,7 @@ function Sidebar() {
         <Link to="/alerts">Alerts</Link>
         <Link to="/cases">Cases</Link>
         <Link to="/responses">Responses</Link>
+        <Link to="/notifications">Notifications</Link>
       </nav>
     </div>
   );

@@ -87,3 +87,16 @@ export async function getResponses() {
 
   return response.json();
 }
+
+
+export async function getNotifications() {
+  const response = await fetch(
+    `${BASE_URL}/notifications`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch notifications");
+  }
+
+  return response.json();
+}
