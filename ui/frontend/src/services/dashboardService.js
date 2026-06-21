@@ -73,3 +73,17 @@ export async function getAlerts() {
 
   return response.json();
 }
+
+
+
+export async function getResponses() {
+  const response = await fetch(
+    `${BASE_URL}/responses`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch responses");
+  }
+
+  return response.json();
+}
