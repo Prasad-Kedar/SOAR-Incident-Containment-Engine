@@ -1,0 +1,9 @@
+Threat Intelligence Module
+Features
+IOC Search
+Malicious IP Detection
+Threat Statistics
+Workflow
+Alert Received ↓ Threat Intelligence Check ↓ Risk Score Calculation ↓ Threat Dashboard
+Purpose
+Provide visibility into malicious activity and support SOC investigations.
