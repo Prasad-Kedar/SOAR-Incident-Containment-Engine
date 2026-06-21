@@ -1,7 +1,28 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/alerts.css";
+import { useEffect, useState } from "react";
+import { getAlerts } from "../services/dashboardService";
 
 function Alerts() {
+
+
+const [alerts, setAlerts] = useState([]);
+
+
+useEffect(() => {
+  async function loadData() {
+    try {
+      const data = await getAlerts();
+      setAlerts(data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  loadData();
+}, []);
+
   return (
     <MainLayout>
       <h1 className="page-title">Alerts</h1>
@@ -47,44 +68,32 @@ function Alerts() {
     </thead>
 
     <tbody>
+  {alerts.map((alert) => (
+    <tr key={alert.id}>
+      <td>{alert.id}</td>
 
-        <tr>
-            <td>ALT-001</td>
-            <td>Firewall</td>
-            <td><span className="critical">Critical</span></td>
-            <td><span className="open">Open</span></td>
-            <td>10:15 AM</td>
-            <td><button className="view-btn">View</button></td>
-        </tr>
+      <td>{alert.src_ip}</td>
 
-        <tr>
-            <td>ALT-002</td>
-            <td>SIEM</td>
-            <td><span className="high">High</span></td>
-            <td><span className="progress">In Progress</span></td>
-            <td>10:30 AM</td>
-            <td><button className="view-btn">View</button></td>
-        </tr>
+      <td>
+        <span className={alert.severity?.toLowerCase()}>
+          {alert.severity}
+        </span>
+      </td>
 
-        <tr>
-            <td>ALT-003</td>
-            <td>IDS</td>
-            <td><span className="medium">Medium</span></td>
-            <td><span className="closed">Closed</span></td>
-            <td>11:00 AM</td>
-            <td><button className="view-btn">View</button></td>
-        </tr>
+      <td>
+        <span className={alert.status?.toLowerCase()}>
+          {alert.status}
+        </span>
+      </td>
 
-        <tr>
-            <td>ALT-004</td>
-            <td>WAF</td>
-            <td><span className="low">Low</span></td>
-            <td><span className="open">Open</span></td>
-            <td>11:20 AM</td>
-            <td><button className="view-btn">View</button></td>
-        </tr>
+      <td>{alert.timestamp}</td>
 
-    </tbody>
+      <td>
+        <button className="view-btn">View</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
 
 </table>
 
