@@ -5,19 +5,39 @@ import { getNotifications } from "../services/dashboardService";
 function Notifications() {
 
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+useEffect(() => {
+  async function loadData() {
+    try {
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await getNotifications();
-        setNotifications(data);
-      } catch (error) {
-        console.error(error);
-      }
+      const data = await getNotifications();
+      setNotifications(data);
+
+    } catch (err) {
+
+      console.error(err);
+      setError("Failed to load notifications");
+
+    } finally {
+
+      setLoading(false);
+
     }
+  }
 
-    loadData();
-  }, []);
+  loadData();
+}, []);
+
+
+if (loading) {
+  return <h2>Loading Notifications...</h2>;
+}
+
+if (error) {
+  return <h2>{error}</h2>;
+}
+
 
   return (
     <MainLayout>

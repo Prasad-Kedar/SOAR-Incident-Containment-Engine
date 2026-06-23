@@ -13,26 +13,36 @@ function Reports() {
   const [incidentReport, setIncidentReport] = useState({});
   const [severityReport, setSeverityReport] = useState({});
   const [analystReport, setAnalystReport] = useState({});
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const incidents = await getIncidentReport();
-        setIncidentReport(incidents);
+ useEffect(() => {
+  async function loadData() {
+    try {
 
-        const severity = await getSeverityReport();
-        setSeverityReport(severity);
+      const incidents = await getIncidentReport();
+      setIncidentReport(incidents);
 
-        const analysts = await getAnalystReport();
-        setAnalystReport(analysts);
+      const severity = await getSeverityReport();
+      setSeverityReport(severity);
 
-      } catch (error) {
-        console.error(error);
-      }
+      const analysts = await getAnalystReport();
+      setAnalystReport(analysts);
+
+    } catch (err) {
+
+      console.error(err);
+      setError("Failed to load reports");
+
+    } finally {
+
+      setLoading(false);
+
     }
+  }
 
-    loadData();
-  }, []);
+  loadData();
+}, []);
 
   const maxSeverity = Math.max(
   severityReport.critical || 0,
@@ -41,6 +51,15 @@ function Reports() {
   severityReport.low || 0,
   1
 );
+
+
+if (loading) {
+  return <h2>Loading Reports...</h2>;
+}
+
+if (error) {
+  return <h2>{error}</h2>;
+}
 
   return (
     <MainLayout>
