@@ -5,19 +5,38 @@ import { getResponses } from "../services/dashboardService";
 function Responses() {
 
   const [responses, setResponses] = useState([]);
+  const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await getResponses();
-        setResponses(data);
-      } catch (error) {
-        console.error(error);
-      }
+useEffect(() => {
+  async function loadData() {
+    try {
+
+      const data = await getResponses();
+      setResponses(data);
+
+    } catch (err) {
+
+      console.error(err);
+      setError("Failed to load responses");
+
+    } finally {
+
+      setLoading(false);
+
     }
+  }
 
-    loadData();
-  }, []);
+  loadData();
+}, []);
+
+if (loading) {
+  return <h2>Loading Responses...</h2>;
+}
+
+if (error) {
+  return <h2>{error}</h2>;
+}
 
   return (
     <MainLayout>

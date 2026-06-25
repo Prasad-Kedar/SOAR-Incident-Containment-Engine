@@ -131,3 +131,15 @@ export async function getAnalystReport() {
 
   return response.json();
 }
+
+
+export async function getCases() {
+
+  const response = await fetch(`${BASE_URL}/cases`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch cases");
+  }
+
+  return response.json();
+}
