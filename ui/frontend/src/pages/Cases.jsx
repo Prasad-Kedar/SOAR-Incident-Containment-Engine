@@ -1,8 +1,47 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/cases.css";
+import { useEffect, useState } from "react";
+import { getCases } from "../services/dashboardService";
+
 
 function Cases() {
+
+const [cases, setCases] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+
+useEffect(() => {
+  async function loadData() {
+    try {
+
+      const data = await getCases();
+      setCases(data);
+
+    } catch (err) {
+
+      console.error(err);
+      setError("Failed to load cases");
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  }
+
+  loadData();
+}, []);
+
+
+if (loading) {
+  return <h2>Loading Cases...</h2>;
+}
+if (error) {
+  return <h2>{error}</h2>;
+}
+
   return (
+
     <MainLayout>
       <h1 className="page-title">Cases</h1>
 
@@ -52,38 +91,20 @@ function Cases() {
         </thead>
 
         <tbody>
-
-          <tr>
-            <td>CASE-001</td>
-            <td>ALT-001</td>
-            <td>Analyst 1</td>
-            <td><span className="critical">Critical</span></td>
-            <td><span className="open">Open</span></td>
-            <td>09:30 AM</td>
-            <td><button className="view-btn">View</button></td>
-          </tr>
-
-          <tr>
-            <td>CASE-002</td>
-            <td>ALT-004</td>
-            <td>Analyst 2</td>
-            <td><span className="high">High</span></td>
-            <td><span className="progress">In Progress</span></td>
-            <td>10:15 AM</td>
-            <td><button className="view-btn">View</button></td>
-          </tr>
-
-          <tr>
-            <td>CASE-003</td>
-            <td>ALT-008</td>
-            <td>Analyst 3</td>
-            <td><span className="medium">Medium</span></td>
-            <td><span className="closed">Closed</span></td>
-            <td>11:00 AM</td>
-            <td><button className="view-btn">View</button></td>
-          </tr>
-
-        </tbody>
+  {cases.map((item) => (
+    <tr key={item.case_id}>
+      <td>{item.case_id}</td>
+      <td>-</td>
+      <td>{item.assigned_to || "Unassigned"}</td>
+      <td>{item.priority}</td>
+      <td>{item.status}</td>
+      <td>{item.created_time}</td>
+      <td>
+        <button className="view-btn">View</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
 
       </table>
 
