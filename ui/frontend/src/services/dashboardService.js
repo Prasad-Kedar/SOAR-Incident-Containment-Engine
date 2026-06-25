@@ -172,3 +172,20 @@ export async function getIncidentIntel(id) {
 
   return response.json();
 }
+
+
+export async function assignIncident(id, analystName) {
+
+  const response = await fetch(
+    `${BASE_URL}/incident/${id}/assign/${analystName}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to assign incident");
+  }
+
+  return response.json();
+}

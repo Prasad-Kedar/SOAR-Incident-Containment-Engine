@@ -1,7 +1,7 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/cases.css";
 import { useEffect, useState } from "react";
-import { getCases } from "../services/dashboardService";
+import {getCases,assignIncident,} from "../services/dashboardService";
 
 
 function Cases() {
@@ -39,6 +39,31 @@ if (loading) {
 if (error) {
   return <h2>{error}</h2>;
 }
+
+async function handleAssign(caseId) {
+
+  const analyst = prompt("Enter Analyst Name");
+
+  if (!analyst) return;
+
+  try {
+
+    await assignIncident(caseId, analyst);
+
+    alert(`Assigned to ${analyst}`);
+
+    const updatedCases = await getCases();
+    setCases(updatedCases);
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Assignment failed");
+
+  }
+}
+
 
   return (
 
@@ -100,7 +125,12 @@ if (error) {
       <td>{item.status}</td>
       <td>{item.created_time}</td>
       <td>
-        <button className="view-btn">View</button>
+       <button
+  className="view-btn"
+  onClick={() => handleAssign(item.case_id)}
+>
+  Assign
+</button>
       </td>
     </tr>
   ))}
