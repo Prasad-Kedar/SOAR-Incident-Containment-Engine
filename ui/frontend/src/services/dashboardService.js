@@ -143,3 +143,32 @@ export async function getCases() {
 
   return response.json();
 }
+
+
+export async function getDashboardSummary() {
+
+  const response = await fetch(
+    `${BASE_URL}/dashboard/summary`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch dashboard summary");
+  }
+
+  return response.json();
+}
+
+
+
+export async function getIncidentIntel(id) {
+
+  const response = await fetch(
+    `${BASE_URL}/incident/${id}/intel`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch incident intel");
+  }
+
+  return response.json();
+}

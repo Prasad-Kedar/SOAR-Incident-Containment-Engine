@@ -1,12 +1,13 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/alerts.css";
 import { useEffect, useState } from "react";
-import { getAlerts } from "../services/dashboardService";
+import { getAlerts,   getIncidentIntel } from "../services/dashboardService";
 
 function Alerts() {
 
 
 const [alerts, setAlerts] = useState([]);
+const [intelData, setIntelData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
@@ -40,6 +41,22 @@ if (loading) {
 
 if (error) {
   return <h2>{error}</h2>;
+}
+
+
+async function handleIntel(id) {
+
+  try {
+
+    const data = await getIncidentIntel(id);
+
+    setIntelData(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
 }
 
   return (
@@ -108,13 +125,52 @@ if (error) {
       <td>{alert.timestamp}</td>
 
       <td>
-        <button className="view-btn">View</button>
+        <button
+  className="view-btn"
+  onClick={() => {
+    console.log("BUTTON CLICKED", alert.id);
+    handleIntel(alert.id);
+  }}
+>
+  Intel
+</button>
       </td>
     </tr>
   ))}
 </tbody>
 
 </table>
+
+
+{intelData && (
+
+  <div className="dashboard-section">
+
+    <h2>Threat Intelligence</h2>
+
+    <p>
+      <strong>Incident ID:</strong>
+      {intelData.incident_id}
+    </p>
+
+    <p>
+      <strong>Source IP:</strong>
+      {intelData.src_ip}
+    </p>
+
+    <p>
+      <strong>Risk Score:</strong>
+      {intelData.risk_score}
+    </p>
+
+    <p>
+      <strong>Threat:</strong>
+      {intelData.threat ? "Malicious" : "Safe"}
+    </p>
+
+  </div>
+
+)}
 
     </MainLayout>
   );
