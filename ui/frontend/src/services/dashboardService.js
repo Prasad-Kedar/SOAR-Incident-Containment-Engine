@@ -221,3 +221,55 @@ export async function isolateHost(incidentId) {
 
   return response.json();
 }
+
+export async function getThreat(ip) {
+
+  const response = await fetch(
+    `${BASE_URL}/threat/${ip}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch threat intel");
+  }
+
+  return response.json();
+}
+
+export async function getIOC(ip) {
+
+  const response = await fetch(
+    `${BASE_URL}/ioc/${ip}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch IOC");
+  }
+
+  return response.json();
+}
+
+export async function getMaliciousThreats() {
+
+  const response = await fetch(
+    `${BASE_URL}/threats/malicious`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch malicious threats");
+  }
+
+  return response.json();
+}
+
+export async function getThreatStats() {
+
+  const response = await fetch(
+    `${BASE_URL}/threats/stats`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch threat stats");
+  }
+
+  return response.json();
+}

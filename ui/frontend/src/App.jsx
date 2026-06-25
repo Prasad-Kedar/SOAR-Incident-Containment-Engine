@@ -6,6 +6,7 @@ import Cases from "./pages/Cases";
 import Responses from "./pages/Responses";
 import Notifications from "./pages/Notifications";
 import Reports from "./pages/Reports";
+import ThreatIntel from "./pages/ThreatIntel";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/responses" element={<Responses />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/threat-intel" element={<ThreatIntel />} />
       </Routes>
     </BrowserRouter>
   );

@@ -13,6 +13,7 @@ function Sidebar() {
         <Link to="/responses">Responses</Link>
         <Link to="/notifications">Notifications</Link>
         <Link to="/reports">Reports</Link>
+        <Link to="/threat-intel">Threat Intel</Link>
       </nav>
     </div>
   );
