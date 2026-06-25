@@ -189,3 +189,35 @@ export async function assignIncident(id, analystName) {
 
   return response.json();
 }
+
+export async function blockIp(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/response/block-ip/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to block IP");
+  }
+
+  return response.json();
+}
+
+export async function isolateHost(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/response/isolate-host/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to isolate host");
+  }
+
+  return response.json();
+}
