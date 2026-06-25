@@ -845,3 +845,26 @@ def verify_ioc(ip: str):
         "ip": ip,
         "malicious": intel["threat"]
     }
+
+@app.get("/cases")
+def get_cases():
+
+    db = SessionLocal()
+
+    alerts = db.query(AlertDB).all()
+
+    result = []
+
+    for alert in alerts:
+
+        result.append({
+            "case_id": alert.id,
+            "assigned_to": alert.assigned_to,
+            "priority": alert.severity,
+            "status": alert.status,
+            "created_time": alert.timestamp
+        })
+
+    db.close()
+
+    return result

@@ -1,5 +1,15 @@
 # SOAR Incident Containment Engine
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![React](https://img.shields.io/badge/React-Frontend-blue)
+![SQLite](https://img.shields.io/badge/SQLite-Database-lightgrey)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![GitHub stars](https://img.shields.io/github/stars/Prasad-Kedar/SOAR-Incident-Containment-Engine)
+![GitHub forks](https://img.shields.io/github/forks/Prasad-Kedar/SOAR-Incident-Containment-Engine)
+![GitHub issues](https://img.shields.io/github/issues/Prasad-Kedar/SOAR-Incident-Containment-Engine)
+
 **Infotact Cybersecurity Internship Project**
 
 ## Project Overview
@@ -8,6 +18,39 @@
 The SOAR (Security Orchestration, Automation, and Response) Incident Containment Engine is designed to automate security incident detection, threat intelligence analysis, alert management, and incident response workflows. The platform helps security teams reduce response time and improve incident handling efficiency through automation.
 
 ---
+
+## Table of Contents
+
+- Overview
+- Project Highlights
+- Achievements
+- Project Statistics
+- Features
+- Security Capabilities
+- Dashboard Workflow
+- Alert Lifecycle
+- Incident Response Workflow
+- SOAR Workflow Diagram
+- Database Schema
+- Architecture
+- Technology Stack
+- Installation
+- API Endpoints
+- Project Structure
+- Team Members
+- Screenshots
+- SOC Use Cases
+- Security Considerations
+- Future Improvements
+- Project Status
+- Testing
+- Deployment
+- Documentation
+- Project Demo
+- License
+- Acknowledgements
+- Contributors
+- Author
 
 # Overview
 
@@ -27,85 +70,283 @@ The SOAR Incident Containment Engine provides a centralized platform for:
 The platform helps SOC analysts investigate alerts, enrich incidents with threat intelligence, perform containment actions, and generate operational reports from a single interface.
 
 ---
+# Project Highlights
 
+✅ 30+ REST APIs
+
+✅ Threat Intelligence Integration
+
+✅ Incident Assignment Workflow
+
+✅ Automated Response Actions
+
+✅ Dashboard Analytics
+
+✅ Security Reporting
+
+✅ Audit Logging
+
+✅ JWT Authentication
+
+✅ Role-Based Access Control (RBAC)
+
+---
+
+# Achievements
+
+- Developed 30+ REST APIs
+- Implemented Threat Intelligence Engine
+- Designed Incident Management Workflow
+- Integrated JWT Authentication & RBAC
+- Built Security Analytics Dashboard
+- Implemented Audit Logging System
+- Created Automated Response Actions
+
+# Project Statistics
+
+| Metric | Value |
+|----------|----------|
+| APIs Developed | 30+ |
+| Core Modules | 8 |
+| Database | SQLite |
+| Backend Framework | FastAPI |
+| Frontend Framework | React |
+| Authentication | JWT |
+| Authorization | RBAC |
+ 
 # Features
 
-## Alert Management
+The SOAR Incident Containment Engine combines threat intelligence, incident management, response automation, reporting, and security analytics into a unified platform for SOC teams.
 
-- Alert ingestion API
-- Alert normalization
-- Alert storage in SQLite
-- Recent alerts tracking
-- High-risk incident identification
+## Alert Management
+- Alert Ingestion
+- Alert Normalization
+- Alert Tracking
+- High-Risk Incident Detection
 
 ## Threat Intelligence
-
-- IP reputation lookup
-- IOC investigation
-- Malicious indicator detection
-- Threat scoring
-- Threat statistics dashboard
+- IOC Investigation
+- IP Reputation Lookup
+- Threat Enrichment
+- Malicious Indicator Detection
 
 ## Incident Management
-
-- Incident enrichment
-- Incident assignment
-- Analyst workload tracking
-- Incident escalation
-- Incident status management
+- Incident Creation
+- Incident Assignment
+- Incident Escalation
+- Incident Status Tracking
 
 ## Response Automation
+- Block Malicious IPs
+- Host Isolation
+- Automated Containment Actions
+- Response History Tracking
 
-- Block malicious IP addresses
-- Host isolation actions
-- Response history tracking
-- Response metrics dashboard
-
-## Notifications
-
-- Incident notification system
-- Notification history
-- Alert escalation workflow
+## Dashboard & Analytics
+- Security Metrics Dashboard
+- Incident Trends Analysis
+- Response Metrics
+- Recent Cases Monitoring
 
 ## Reporting
+- Incident Reports
+- Severity Reports
+- Analyst Performance Reports
+- Security Analytics Reports
 
-- Incident reports
-- Severity distribution reports
-- Analyst workload reports
-- Dashboard analytics
+## Authentication & Access Control
+- JWT Authentication
+- RBAC
+- Admin Dashboard
+- Analyst Dashboard
 
-## Authentication & Authorization
+## Audit & Notifications
+- Audit Logging
+- Incident Notifications
+- Escalation Alerts
+- Activity Tracking
 
-- User creation
-- JWT authentication
-- Secure dashboard access
-- Role-based permissions
-- Admin and Analyst dashboards
+# Security Capabilities
+
+- Threat Intelligence Enrichment
+- IOC Investigation
+- Incident Correlation
+- Automated Containment
+- Incident Escalation
+- Analyst Assignment
+- Audit Logging
+- Dashboard Analytics
+- JWT Authentication
+- RBAC Authorization
+- Response Automation
+- Security Reporting
+
+# Dashboard Workflow Explanation
+
+```mermaid
+flowchart LR
+A[Alert Generated] --> B[Alert Ingestion]
+B --> C[Threat Intelligence Lookup]
+C --> D[Incident Creation]
+D --> E[Dashboard Analytics]
+E --> F[SOC Analyst Review]
+```
+
+---
+
+# Alert Lifecycle
+
+```mermaid
+flowchart LR
+A[Alert Received]
+--> B[Normalize Alert]
+--> C[Store in SQLite Database]
+--> D[Threat Intelligence Enrichment]
+--> E[Incident Creation]
+--> F[Assign Analyst]
+--> G[Response Action]
+--> H[Incident Closure]
+```
+
+---
+
+# Incident Response Workflow
+
+```mermaid
+flowchart TD
+A[Security Alert]
+A --> B[Threat Analysis]
+B --> C{Threat Detected?}
+
+C -->|Yes| D[Create Incident]
+D --> E[Assign Analyst]
+E --> F[Containment Action]
+
+F --> G[Block IP]
+F --> H[Isolate Host]
+
+G --> I[Generate Report]
+H --> I
+
+C -->|No| J[Mark Safe]
+```
+
+---
+
+# SOAR Workflow Diagram
+
+```mermaid
+flowchart TB
+
+User["SOC Analyst"]
+
+Frontend["React Frontend"]
+
+Backend["FastAPI Backend"]
+
+Threat["Threat Intelligence Engine"]
+
+Incident["Incident Management Engine"]
+
+Response["Response Automation Engine"]
+
+Report["Reporting Engine"]
+
+Notify["Notification Engine"]
+
+Auth["Authentication & RBAC"]
+
+DB[("SQLite Database")]
+
+User --> Frontend
+
+Frontend --> Backend
+
+Backend --> Threat
+
+Backend --> Incident
+
+Backend --> Response
+
+Backend --> Report
+
+Backend --> Notify
+
+Backend --> Auth
+
+Threat --> DB
+
+Incident --> DB
+
+Response --> DB
+
+Report --> DB
+
+Notify --> DB
+
+Auth --> DB
+```
+
+---
+
+# Database Schema
+
+```text
+Alert
+ ├── id
+ ├── source
+ ├── severity
+ ├── status
+ ├── assigned_to
+
+ThreatIntel
+ ├── ip_address
+ ├── threat_score
+ ├── reputation
+
+ResponseAction
+ ├── incident_id
+ ├── action
+ ├── timestamp
+```
 
 ---
 
 # Architecture
+## System Architecture
 
-```text
-SOC Analyst / Security User
-            │
-            ▼
-     React Frontend
-            │
-            ▼
-      FastAPI Backend
-            │
- ┌──────────┼──────────┐
- │          │          │
- ▼          ▼          ▼
+```mermaid
+flowchart TB
 
-Threat      Incident   Response
-Intel       Mgmt       Engine
+SOC["SOC Analyst / Security User"]
 
-            │
-            ▼
+React["React Frontend"]
 
-      SQLite Database
+API["FastAPI Backend"]
+
+Threat["Threat Intelligence Engine"]
+
+Incident["Incident Management Engine"]
+
+Response["Response Automation Engine"]
+
+DB[("SQLite Database")]
+
+SOC --> React
+
+React --> API
+
+API --> Threat
+
+API --> Incident
+
+API --> Response
+
+Threat --> DB
+
+Incident --> DB
+
+Response --> DB
 ```
 
 ## Core Modules
@@ -157,10 +398,9 @@ Intel       Mgmt       Engine
 ## Clone Repository
 
 ```bash
-git clone https://github.com/Prasad-Kedar/SOAR-Incident-Containment-Engine.git 
+git clone https://github.com/Prasad-Kedar/SOAR-Incident-Containment-Engine.git
 cd SOAR-Incident-Containment-Engine
-
-
+```
 ## Create Virtual Environment
 
 ```bash
@@ -181,12 +421,12 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-## Install Dependencies
+
+# Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
-
 ## Run Backend
 
 ```bash
@@ -194,7 +434,7 @@ cd backend
 uvicorn main:app --reload
 ```
 
-Backend:
+Backend URL:
 
 ```text
 http://127.0.0.1:8001
@@ -205,9 +445,6 @@ Swagger Documentation:
 ```text
 http://127.0.0.1:8001/docs
 ```
-
----
-
 # API Endpoints
 
 ## Alerts
@@ -323,41 +560,64 @@ SOAR-Incident-Containment-Engine
 # Team Members
 
 | Name | Role | Responsibilities |
-|--------|--------|----------------|
-| Prasad Kedar | Team Lead | Backend Development, Architecture, Threat Intelligence, Reporting APIs, Documentation, Deployment Planning | README.md 
+|------|------|------------------|
+| Prasad Kedar | Team Lead | Backend Development, Architecture, Threat Intelligence, Reporting APIs, Documentation, Deployment Planning |
 | Almeen | Frontend Developer | React Integration, Dashboard UI, API Integration |
 | Adarsh | QA & Testing | API Testing, Validation, Security Testing |
 | Nelna | Documentation | User Guides, Screenshots, Documentation Support |
 
 
-
 # Screenshots
-
 ## Dashboard
 
-
+![Dashboard](Screenshots/Dashboard/dashboard.png)
 
 ## Threat Intelligence
 
-Add IOC and Threat Lookup screenshots here.
+![Threat Intelligence](Screenshots/ThreatIntel/threatintel.png)
 
 ## Incident Management
 
-Add incident management screenshots here.
+![Incident Management](Screenshots/Incidents/incidents.png)
 
 ## Reports
 
-
+![Reports](Screenshots/Reports/reports.png)
 
 ## Swagger API
 
-
-
-## GitHub Project
-
-Add project board, issues, commits, and PR screenshots here.
-
+![Swagger](Screenshots/Swagger/swagger.png)
 ---
+
+# SOC Use Cases
+
+## Malicious IP Detection
+
+1. Alert Generated
+2. Threat Lookup Performed
+3. Incident Created
+4. Analyst Assigned
+5. Malicious IP Blocked
+6. Incident Closed
+
+## Host Compromise Investigation
+
+1. Alert Received
+2. Threat Intelligence Enrichment
+3. Incident Escalation
+4. Host Isolation
+5. Response Logged
+6. Report Generated
+
+# Security Considerations
+
+- JWT Authentication
+- Password Hashing
+- Role-Based Access Control (RBAC)
+- Audit Logging
+- Input Validation
+- Secure API Access
+- Threat Intelligence Validation
 
 # Future Improvements
 
@@ -375,14 +635,11 @@ Add project board, issues, commits, and PR screenshots here.
 - Cloud deployment support
 - AI-powered threat correlation
 
-
-
 # Project Status
 
-Current Status: Active Development
+🟢 Status: Feature Complete Internship Project
 
-This project was developed as a cybersecurity internship project to demonstrate Security Orchestration, Automation, and Response (SOAR) concepts including threat intelligence, incident management, automated response, reporting, and SOC workflow automation.---
-
+This project successfully demonstrates Security Orchestration, Automation, and Response (SOAR) capabilities including alert ingestion, threat intelligence enrichment, incident management, automated containment, reporting, and security analytics.
 
 
 ## UI Design
@@ -399,20 +656,6 @@ The dashboard UI includes:
 
 * `ui/wireframes/dashboard-wireframe.md`
 * `ui/ui-requirements.md`
-
-
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Run the Application
-
-```bash
-uvicorn main:app --reload
-```
 
 ---
 
@@ -431,7 +674,16 @@ uvicorn main:app --reload
 * Pytest
 
 ---
+# Deployment
 
+## Current Deployment
+- Local Development Environment
+
+## Planned Deployment
+- Docker Containerization
+- Cloud Deployment
+- Kubernetes Support
+- CI/CD Pipeline Integration
 ## Documentation
 
 The project documentation includes:
@@ -446,9 +698,10 @@ The project documentation includes:
 ---
 ## Project Demo
 
-Demo Video:
+🎥 Demo Video:
 
-https://youtu.be/VqMqUd9eYB8?si=RdB9dlTFJiotBA5b
+[Watch Demo Video](https://youtu.be/VqMqUd9eYB8?si=RdB9dlTFJiotBA5b)
+
 
 ---
 ## Project Structure
@@ -743,3 +996,34 @@ Description
 - Results are displayed as widgets, tables, and charts.
 - Users can investigate alerts and trigger containment actions.
 
+## License
+
+This project is developed for educational and internship purposes.
+
+---
+
+## Acknowledgements
+
+Infotact Cybersecurity Internship Program
+
+---
+# Contributors
+
+- Prasad Kedar (Team Lead)
+- Almeen
+- Adarsh
+- Nelna
+
+## Author
+## Prasad Kedar (Team Lead)
+
+Responsible for:
+
+- Backend Architecture Design
+- Threat Intelligence Development
+- Incident Management APIs
+- Reporting Engine
+- Authentication & RBAC
+- Project Documentation
+- Deployment Planning
+- Team Coordination
