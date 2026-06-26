@@ -1,7 +1,8 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/alerts.css";
 import { useEffect, useState } from "react";
-import { getAlerts,   getIncidentIntel,  notifyIncident, } from "../services/dashboardService";
+import { getAlerts,   getIncidentIntel,  notifyIncident,  blockIp,
+  isolateHost, } from "../services/dashboardService";
 
 function Alerts() {
 
@@ -64,6 +65,36 @@ async function handleNotify(id) {
   try {
 
     const data = await notifyIncident(id);
+
+    alert(data.message);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+async function handleBlockIp(id) {
+
+  try {
+
+    const data = await blockIp(id);
+
+    alert(data.message);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+async function handleIsolateHost(id) {
+
+  try {
+
+    const data = await isolateHost(id);
 
     alert(data.message);
 
@@ -141,6 +172,8 @@ async function handleNotify(id) {
 
       <td>
        <>
+<td>
+
   <button
     className="view-btn"
     onClick={() => handleIntel(alert.id)}
@@ -151,10 +184,28 @@ async function handleNotify(id) {
   <button
     className="search-btn"
     onClick={() => handleNotify(alert.id)}
-    style={{ marginLeft: "8px" }}
+    style={{ marginLeft: "5px" }}
   >
     Notify
   </button>
+
+  <button
+    className="search-btn"
+    onClick={() => handleBlockIp(alert.id)}
+    style={{ marginLeft: "5px" }}
+  >
+    Block IP
+  </button>
+
+  <button
+    className="search-btn"
+    onClick={() => handleIsolateHost(alert.id)}
+    style={{ marginLeft: "5px" }}
+  >
+    Isolate
+  </button>
+
+</td>
 </>
       </td>
     </tr>

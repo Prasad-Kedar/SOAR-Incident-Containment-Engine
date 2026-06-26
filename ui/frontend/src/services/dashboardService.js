@@ -290,3 +290,61 @@ export async function notifyIncident(incidentId) {
 
   return response.json();
 }
+
+export async function login() {
+
+  const response = await fetch(
+    `${BASE_URL}/login`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Login failed");
+  }
+
+  return response.json();
+}
+
+export async function getSecureDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/secure/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load secure dashboard");
+  }
+
+  return response.json();
+}
+
+export async function getAdminDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/admin/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load admin dashboard");
+  }
+
+  return response.json();
+}
+
+export async function getAnalystDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/analyst/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load analyst dashboard");
+  }
+
+  return response.json();
+}
+
+
+
