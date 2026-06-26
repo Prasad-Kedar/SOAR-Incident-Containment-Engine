@@ -273,3 +273,20 @@ export async function getThreatStats() {
 
   return response.json();
 }
+
+
+export async function notifyIncident(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/notify/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to send notification");
+  }
+
+  return response.json();
+}

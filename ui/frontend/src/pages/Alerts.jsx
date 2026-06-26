@@ -1,7 +1,7 @@
 import MainLayout from "../layouts/MainLayout";
 import "../styles/alerts.css";
 import { useEffect, useState } from "react";
-import { getAlerts,   getIncidentIntel } from "../services/dashboardService";
+import { getAlerts,   getIncidentIntel,  notifyIncident, } from "../services/dashboardService";
 
 function Alerts() {
 
@@ -51,6 +51,21 @@ async function handleIntel(id) {
     const data = await getIncidentIntel(id);
 
     setIntelData(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+async function handleNotify(id) {
+
+  try {
+
+    const data = await notifyIncident(id);
+
+    alert(data.message);
 
   } catch (error) {
 
@@ -125,15 +140,22 @@ async function handleIntel(id) {
       <td>{alert.timestamp}</td>
 
       <td>
-        <button
-  className="view-btn"
-  onClick={() => {
-    console.log("BUTTON CLICKED", alert.id);
-    handleIntel(alert.id);
-  }}
->
-  Intel
-</button>
+       <>
+  <button
+    className="view-btn"
+    onClick={() => handleIntel(alert.id)}
+  >
+    Intel
+  </button>
+
+  <button
+    className="search-btn"
+    onClick={() => handleNotify(alert.id)}
+    style={{ marginLeft: "8px" }}
+  >
+    Notify
+  </button>
+</>
       </td>
     </tr>
   ))}
