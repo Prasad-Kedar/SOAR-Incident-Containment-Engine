@@ -658,7 +658,7 @@ https://soar-incident-containment-engine.onrender.com
 https://soar-incident-containment-engine.onrender.com/docs
 
 ### Frontend
-🚧 Deployment in Progress
+_To be deployed on Vercel_
 
 ## Planned Deployment
 - Docker Containerization
