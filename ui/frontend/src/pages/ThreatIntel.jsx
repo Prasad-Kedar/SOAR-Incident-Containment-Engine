@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import {
   getMaliciousThreats,
   getThreatStats,
+  getThreat,
+  getIOC,
 } from "../services/dashboardService";
-
 function ThreatIntel() {
 
   const [threats, setThreats] = useState([]);
@@ -13,6 +14,14 @@ function ThreatIntel() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [ip, setIp] = useState("");
+
+  const [threatResult, setThreatResult] =
+  useState(null);
+
+  const [iocResult, setIocResult] =
+  useState(null);
 
   useEffect(() => {
 
@@ -57,6 +66,39 @@ function ThreatIntel() {
     return <h2>{error}</h2>;
   }
 
+ async function handleThreatLookup() {
+
+  try {
+
+    const data =
+      await getThreat(ip);
+
+    setThreatResult(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+async function handleIOCCheck() {
+
+  try {
+
+    const data =
+      await getIOC(ip);
+
+    setIocResult(data);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+
   return (
     <MainLayout>
 
@@ -77,6 +119,89 @@ function ThreatIntel() {
         </div>
 
       </div>
+
+      <div className="dashboard-section">
+
+  <h2>IP Lookup</h2>
+
+  <input
+    type="text"
+    placeholder="Enter IP Address"
+    value={ip}
+    onChange={(e) =>
+      setIp(e.target.value)
+    }
+    className="search-input"
+  />
+
+  <button
+    className="search-btn"
+    onClick={handleThreatLookup}
+  >
+    Threat Lookup
+  </button>
+
+  <button
+    className="search-btn"
+    onClick={handleIOCCheck}
+    style={{ marginLeft: "10px" }}
+  >
+    IOC Check
+  </button>
+
+</div>
+
+{threatResult && (
+
+  <div className="dashboard-section">
+
+    <h2>Threat Result</h2>
+
+    <p>
+      IP: {threatResult.ip}
+    </p>
+
+    <p>
+      Risk Score:
+      {threatResult.risk_score}
+    </p>
+
+    <p>
+      Threat:
+      {threatResult.threat
+        ? "Malicious"
+        : "Safe"}
+    </p>
+
+  </div>
+
+)}
+
+{iocResult && (
+
+  <div className="dashboard-section">
+
+    <h2>IOC Result</h2>
+
+    <p>
+      IP: {iocResult.ip}
+    </p>
+
+    <p>
+      Risk Score:
+      {iocResult.risk_score}
+    </p>
+
+    <p>
+      Threat:
+      {iocResult.threat
+        ? "Malicious"
+        : "Safe"}
+    </p>
+
+  </div>
+
+)}
 
       <table className="cases-table">
 
