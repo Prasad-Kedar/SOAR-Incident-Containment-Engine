@@ -313,41 +313,6 @@ ResponseAction
 ---
 
 # Architecture
-## System Architecture
-
-```mermaid
-flowchart TB
-
-SOC["SOC Analyst / Security User"]
-
-React["React Frontend"]
-
-API["FastAPI Backend"]
-
-Threat["Threat Intelligence Engine"]
-
-Incident["Incident Management Engine"]
-
-Response["Response Automation Engine"]
-
-DB[("SQLite Database")]
-
-SOC --> React
-
-React --> API
-
-API --> Threat
-
-API --> Incident
-
-API --> Response
-
-Threat --> DB
-
-Incident --> DB
-
-Response --> DB
-```
 
 ## Core Modules
 
@@ -568,25 +533,27 @@ SOAR-Incident-Containment-Engine
 
 
 # Screenshots
-## Dashboard
 
-![Dashboard](Screenshots/Dashboard/dashboard.png)
+### Swagger UI
+![Swagger UI](Screenshots/swagger-ui.png)
 
-## Threat Intelligence
+### Dashboard
+![Dashboard](Screenshots/dashboard.png)
 
-![Threat Intelligence](Screenshots/ThreatIntel/threatintel.png)
+### Alerts API
+![Alerts API](Screenshots/alerts-api.png)
 
-## Incident Management
+### Cases API
+![Cases API](Screenshots/cases-api.png)
 
-![Incident Management](Screenshots/Incidents/incidents.png)
+### Reports API
+![Reports API](Screenshots/reports-api.png)
 
-## Reports
+### Threat Feed
+![Threat Feed](Screenshots/threat-feed.png)
 
-![Reports](Screenshots/Reports/reports.png)
-
-## Swagger API
-
-![Swagger](Screenshots/Swagger/swagger.png)
+### Render Deployment
+![Render](Screenshots/render-live.png)
 ---
 
 # SOC Use Cases
@@ -676,8 +643,22 @@ The dashboard UI includes:
 ---
 # Deployment
 
-## Current Deployment
-- Local Development Environment
+| Component | Platform | Status |
+|-----------|----------|--------|
+| Backend | Render | ✅ Live |
+| Frontend | Vercel | ✅ Live |
+| API Docs | Swagger | ✅ Live |
+
+## Live Demo
+
+### Backend API
+https://soar-incident-containment-engine.onrender.com
+
+### Swagger Documentation
+https://soar-incident-containment-engine.onrender.com/docs
+
+### Frontend
+🚧 Deployment in Progress
 
 ## Planned Deployment
 - Docker Containerization
@@ -707,13 +688,13 @@ The project documentation includes:
 
 ## License
 
-This project is developed for educational and internship purposes.
+This project was developed for educational purposes as part of the Infotact Cybersecurity Internship Program.
 
 ---
 
 ## Acknowledgements
 
-Infotact Cybersecurity Internship Program
+Developed during the Infotact Cybersecurity Internship under the guidance of mentors and project reviewers.
 
 ---
 # Contributors
