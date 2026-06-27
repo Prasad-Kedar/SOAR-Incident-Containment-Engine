@@ -6,42 +6,50 @@ function Notifications() {
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-const [error, setError] = useState("");
-useEffect(() => {
-  async function loadData() {
+  const [error, setError] = useState("");
+
+  async function loadNotifications() {
     try {
+      setLoading(true);
 
       const data = await getNotifications();
+
       setNotifications(data);
+      setError("");
 
     } catch (err) {
-
       console.error(err);
       setError("Failed to load notifications");
 
     } finally {
-
       setLoading(false);
-
     }
   }
 
-  loadData();
-}, []);
+  useEffect(() => {
+     loadNotifications();
+  }, []);
 
+  if (loading) {
+    return <h2>Loading Notifications...</h2>;
+  }
 
-if (loading) {
-  return <h2>Loading Notifications...</h2>;
-}
-
-if (error) {
-  return <h2>{error}</h2>;
-}
-
+  if (error) {
+    return <h2>{error}</h2>;
+  }
 
   return (
     <MainLayout>
+
       <h1 className="page-title">Notifications</h1>
+
+      <button
+        className="search-btn"
+        onClick={loadNotifications}
+        style={{ marginBottom: "20px" }}
+      >
+        Refresh
+      </button>
 
       <table className="cases-table">
 

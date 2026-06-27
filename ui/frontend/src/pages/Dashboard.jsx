@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import DashboardCard from "../components/DashboardCard";
 import {
   getSecurityMetrics,
-  getRecentAlerts, getIncidentTrends,getRecentCases, getResponseMetrics,
+  getRecentAlerts, getIncidentTrends,getRecentCases, getResponseMetrics,  getDashboardSummary,
 } from "../services/dashboardService";
 
 function Dashboard() {
@@ -35,6 +35,14 @@ const [responseMetrics, setResponseMetrics] = useState({
   isolated_hosts: 0,
 });
 
+
+const [summary, setSummary] = useState({
+  total_alerts: 0,
+  high_alerts: 0,
+  medium_alerts: 0,
+  low_alerts: 0,
+});
+
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
@@ -55,6 +63,9 @@ useEffect(() => {
 
       const responseData = await getResponseMetrics();
       setResponseMetrics(responseData);
+
+      const summaryData = await getDashboardSummary();
+      setSummary(summaryData);
 
     } catch (err) {
       console.error(err);
@@ -242,6 +253,37 @@ if (error) {
     <DashboardCard
       title="Isolated Hosts"
       value={responseMetrics.isolated_hosts}
+    />
+
+  </div>
+
+</div>
+
+
+<div className="dashboard-section">
+
+  <h2>Alert Summary</h2>
+
+  <div className="cards">
+
+    <DashboardCard
+      title="Total Alerts"
+      value={summary.total_alerts}
+    />
+
+    <DashboardCard
+      title="High Alerts"
+      value={summary.high_alerts}
+    />
+
+    <DashboardCard
+      title="Medium Alerts"
+      value={summary.medium_alerts}
+    />
+
+    <DashboardCard
+      title="Low Alerts"
+      value={summary.low_alerts}
     />
 
   </div>

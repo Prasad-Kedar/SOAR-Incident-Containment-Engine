@@ -23,3 +23,31 @@
 .sidebar a:hover {
   background: #1e293b;
 }
+
+
+
+.logout-btn {
+
+  width: 100%;
+
+  margin-top: 20px;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #a92e2e;
+
+  color: white;
+
+  cursor: pointer;
+
+}
+
+.logout-btn:hover {
+
+  background: #781515;
+
+}

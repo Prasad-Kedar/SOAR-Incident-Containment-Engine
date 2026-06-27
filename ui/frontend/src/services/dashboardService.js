@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function getSecurityMetrics() {
   const response = await fetch(
@@ -143,3 +143,208 @@ export async function getCases() {
 
   return response.json();
 }
+
+
+export async function getDashboardSummary() {
+
+  const response = await fetch(
+    `${BASE_URL}/dashboard/summary`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch dashboard summary");
+  }
+
+  return response.json();
+}
+
+
+
+export async function getIncidentIntel(id) {
+
+  const response = await fetch(
+    `${BASE_URL}/incident/${id}/intel`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch incident intel");
+  }
+
+  return response.json();
+}
+
+
+export async function assignIncident(id, analystName) {
+
+  const response = await fetch(
+    `${BASE_URL}/incident/${id}/assign/${analystName}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to assign incident");
+  }
+
+  return response.json();
+}
+
+export async function blockIp(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/response/block-ip/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to block IP");
+  }
+
+  return response.json();
+}
+
+export async function isolateHost(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/response/isolate-host/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to isolate host");
+  }
+
+  return response.json();
+}
+
+export async function getThreat(ip) {
+
+  const response = await fetch(
+    `${BASE_URL}/threat/${ip}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch threat intel");
+  }
+
+  return response.json();
+}
+
+export async function getIOC(ip) {
+
+  const response = await fetch(
+    `${BASE_URL}/ioc/${ip}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch IOC");
+  }
+
+  return response.json();
+}
+
+export async function getMaliciousThreats() {
+
+  const response = await fetch(
+    `${BASE_URL}/threats/malicious`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch malicious threats");
+  }
+
+  return response.json();
+}
+
+export async function getThreatStats() {
+
+  const response = await fetch(
+    `${BASE_URL}/threats/stats`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch threat stats");
+  }
+
+  return response.json();
+}
+
+
+export async function notifyIncident(incidentId) {
+
+  const response = await fetch(
+    `${BASE_URL}/notify/${incidentId}`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to send notification");
+  }
+
+  return response.json();
+}
+
+export async function login() {
+
+  const response = await fetch(
+    `${BASE_URL}/login`,
+    {
+      method: "POST",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Login failed");
+  }
+
+  return response.json();
+}
+
+export async function getSecureDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/secure/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load secure dashboard");
+  }
+
+  return response.json();
+}
+
+export async function getAdminDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/admin/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load admin dashboard");
+  }
+
+  return response.json();
+}
+
+export async function getAnalystDashboard() {
+
+  const response = await fetch(
+    `${BASE_URL}/analyst/dashboard`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to load analyst dashboard");
+  }
+
+  return response.json();
+}
+
+
+
