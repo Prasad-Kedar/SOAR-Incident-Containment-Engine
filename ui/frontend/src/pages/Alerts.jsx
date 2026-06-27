@@ -2,13 +2,15 @@ import MainLayout from "../layouts/MainLayout";
 import "../styles/alerts.css";
 import { useEffect, useState } from "react";
 import { getAlerts,   getIncidentIntel,  notifyIncident,  blockIp,
-  isolateHost, } from "../services/dashboardService";
+  isolateHost,   assignIncident, } from "../services/dashboardService";
 
 function Alerts() {
 
 
 const [alerts, setAlerts] = useState([]);
 const [intelData, setIntelData] = useState(null);
+const [selectedAlert, setSelectedAlert] = useState(null);
+const [analystName, setAnalystName] = useState("");
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
@@ -45,11 +47,13 @@ if (error) {
 }
 
 
-async function handleIntel(id) {
+async function handleIntel(alert) {
 
   try {
 
-    const data = await getIncidentIntel(id);
+    const data = await getIncidentIntel(alert.id);
+
+    setSelectedAlert(alert);
 
     setIntelData(data);
 
@@ -103,6 +107,34 @@ async function handleIsolateHost(id) {
     console.error(error);
 
   }
+}
+
+async function handleAssign() {
+
+  if (!analystName.trim()) {
+    alert("Please enter analyst name");
+    return;
+  }
+
+  try {
+
+    const data = await assignIncident(
+      selectedAlert.id,
+      analystName
+    );
+
+    alert(data.message);
+
+    setAnalystName("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Failed to assign analyst");
+
+  }
+
 }
 
   return (
@@ -171,43 +203,19 @@ async function handleIsolateHost(id) {
       <td>{alert.timestamp}</td>
 
       <td>
-       <>
-<td>
+      
 
+  <td>
   <button
     className="view-btn"
-    onClick={() => handleIntel(alert.id)}
+    onClick={() => handleIntel(alert)}
   >
-    Intel
+    View Incident
   </button>
-
-  <button
-    className="search-btn"
-    onClick={() => handleNotify(alert.id)}
-    style={{ marginLeft: "5px" }}
-  >
-    Notify
-  </button>
-
-  <button
-    className="search-btn"
-    onClick={() => handleBlockIp(alert.id)}
-    style={{ marginLeft: "5px" }}
-  >
-    Block IP
-  </button>
-
-  <button
-    className="search-btn"
-    onClick={() => handleIsolateHost(alert.id)}
-    style={{ marginLeft: "5px" }}
-  >
-    Isolate
-  </button>
+</td>
 
 </td>
-</>
-      </td>
+
     </tr>
   ))}
 </tbody>
@@ -215,36 +223,105 @@ async function handleIsolateHost(id) {
 </table>
 
 
-{intelData && (
+{intelData && selectedAlert && (
 
-  <div className="dashboard-section">
+<div className="dashboard-section">
 
-    <h2>Threat Intelligence</h2>
+<h2>Incident Details</h2>
 
-    <p>
-      <strong>Incident ID:</strong>
-      {intelData.incident_id}
-    </p>
+<p>
+<strong>Incident ID:</strong> {selectedAlert.id}
+</p>
 
-    <p>
-      <strong>Source IP:</strong>
-      {intelData.src_ip}
-    </p>
+<p>
+<strong>Source IP:</strong> {selectedAlert.src_ip}
+</p>
 
-    <p>
-      <strong>Risk Score:</strong>
-      {intelData.risk_score}
-    </p>
+<p>
+<strong>Severity:</strong> {selectedAlert.severity}
+</p>
 
-    <p>
-      <strong>Threat:</strong>
-      {intelData.threat ? "Malicious" : "Safe"}
-    </p>
+<p>
+<strong>Status:</strong> {selectedAlert.status}
+</p>
 
-  </div>
+<p>
+<strong>Risk Score:</strong> {intelData.risk_score}
+</p>
+
+<p>
+<strong>Threat:</strong>{" "}
+{intelData.threat ? "Malicious" : "Safe"}
+</p>
+
+<div
+style={{
+marginTop: "20px",
+display: "flex",
+gap: "10px",
+flexWrap: "wrap",
+}}
+>
+
+<button
+className="search-btn"
+onClick={() => handleNotify(selectedAlert.id)}
+>
+Notify
+</button>
+
+<button
+className="search-btn"
+onClick={() => handleBlockIp(selectedAlert.id)}
+>
+Block IP
+</button>
+
+<button
+className="search-btn"
+onClick={() => handleIsolateHost(selectedAlert.id)}
+>
+Isolate Host
+</button>
+
+</div>
+<hr style={{ margin: "25px 0" }} />
+
+<hr style={{ margin: "25px 0" }} />
+
+<h3>Assign Analyst</h3>
+
+<input
+  type="text"
+  placeholder="Enter Analyst Name"
+  value={analystName}
+  onChange={(e) =>
+    setAnalystName(e.target.value)
+  }
+  className="search-input"
+/>
+
+<button
+  className="search-btn"
+  onClick={handleAssign}
+  style={{ marginTop: "10px" }}
+>
+  Assign Analyst
+</button>
+
+<h3>Activity Timeline</h3>
+
+<ul style={{ lineHeight: "2" }}>
+  <li>✅ Alert Received</li>
+  <li>✅ Threat Intelligence Retrieved</li>
+  <li>✅ Response Actions Available</li>
+  <li>🟡 Waiting for Analyst Action</li>
+</ul>
+
+</div>
+
 
 )}
-
     </MainLayout>
   );
 }
