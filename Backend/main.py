@@ -1,5 +1,7 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends
+from fastapi import HTTPException
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from fastapi import FastAPI
 from models import Alert
@@ -39,6 +41,10 @@ app.add_middleware(
 )
 
 SECRET_KEY = "soar-secret-key"
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 @app.get("/")
 def home():
@@ -607,16 +613,44 @@ def create_user():
     }
 
 @app.post("/login")
-def login():
+def login(request: LoginRequest):
+
+    db = SessionLocal()
+
+    user = db.query(User).filter(
+        User.username == request.username
+    ).first()
+
+    if not user:
+        db.close()
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username"
+        )
+
+    if user.password != request.password:
+        db.close()
+
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid password"
+        )
 
     token = jwt.encode(
-        {"user": "admin"},
+        {
+            "user": user.username,
+            "role": user.role
+        },
         SECRET_KEY,
         algorithm="HS256"
     )
 
+    db.close()
+
     return {
-        "access_token": token
+        "access_token": token,
+        "role": user.role
     }
 
 @app.get("/secure/dashboard")
