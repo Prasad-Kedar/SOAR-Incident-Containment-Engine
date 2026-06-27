@@ -202,7 +202,7 @@ async function handleAssign() {
 
       <td>{alert.timestamp}</td>
 
-      <td>
+      
       
 
   <td>
@@ -214,7 +214,7 @@ async function handleAssign() {
   </button>
 </td>
 
-</td>
+
 
     </tr>
   ))}
