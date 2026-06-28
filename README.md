@@ -9,6 +9,9 @@
 ![GitHub stars](https://img.shields.io/github/stars/Prasad-Kedar/SOAR-Incident-Containment-Engine)
 ![GitHub forks](https://img.shields.io/github/forks/Prasad-Kedar/SOAR-Incident-Containment-Engine)
 ![GitHub issues](https://img.shields.io/github/issues/Prasad-Kedar/SOAR-Incident-Containment-Engine)
+![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=white)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white)
+![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
 
 **Infotact Cybersecurity Internship Project**
 
@@ -311,8 +314,26 @@ ResponseAction
 ```
 
 ---
-
 # Architecture
+
+## System Architecture
+
+```mermaid
+flowchart LR
+
+User["SOC Analyst"]
+React["React Frontend"]
+API["FastAPI Backend"]
+Auth["JWT Authentication"]
+DB[("SQLite Database")]
+
+User --> React
+React --> API
+API --> Auth
+API --> DB
+```
+
+---
 
 ## Core Modules
 
@@ -325,9 +346,6 @@ ResponseAction
 - Authentication Module
 
 ---
-
-# Technology Stack
-
 ## Backend
 
 - FastAPI
@@ -385,7 +403,15 @@ venv\Scripts\activate
 ```bash
 source venv/bin/activate
 ```
+## Environment Variables
 
+No environment variables are currently required.
+
+For production deployment, the following may be added:
+
+- JWT_SECRET_KEY
+- DATABASE_URL
+- API_BASE_URL
 
 # Install Dependencies
 
@@ -397,6 +423,14 @@ pip install -r requirements.txt
 ```bash
 cd backend
 uvicorn main:app --reload
+
+## Run Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
 ```
 
 Backend URL:
@@ -602,11 +636,15 @@ SOAR-Incident-Containment-Engine
 - Cloud deployment support
 - AI-powered threat correlation
 
-# Project Status
+## Project Status
 
-🟢 Status: Feature Complete Internship Project
+🟢 Backend: Live on Render
 
-This project successfully demonstrates Security Orchestration, Automation, and Response (SOAR) capabilities including alert ingestion, threat intelligence enrichment, incident management, automated containment, reporting, and security analytics.
+🟡 Frontend: Integration in Progress
+
+🟢 Documentation: Complete
+
+🟢 API Testing: Complete
 
 
 ## UI Design
@@ -685,76 +723,6 @@ The project documentation includes:
 
 
 ---
-## Project Structure
-
-```text
-SOAR-Incident-Containment-Engine/
-├── api/        # API endpoints and request handling
-├── services/   # Core business logic and automation services
-├── database/   # Database models and data management
-├── tests/      # Unit and integration tests
-├── docs/       # Project documentation and diagrams
-├── ui/         # User interface and dashboard components
-└── README.md   # Project overview and setup instructions
-```
-## Features
-
-- Automated incident containment workflows
-- Threat intelligence integration
-- Alert monitoring and management
-- Security incident tracking
-- API-based backend communication
-- Dashboard for security operations visibility
-- Incident response automation
-
-# Technology Stack
-
-Component| Technology
-Backend| Python
-Frontend| HTML, CSS, JavaScript
-APIs| REST API
-Version Control| Git & GitHub
-
-# Installation
-
-1. Clone the Repository
-
-git clone https://github.com/Prasad-Kedar/SOAR-Incident-Containment-Engine.git
-cd SOAR-Incident-Containment-Engine
-
-2. Create Virtual Environment
-
-python3 -m venv venv
-
-3. Activate Virtual Environment
-
-source venv/bin/activate
-
-4. Install Dependencies
-
-pip install -r requirements.txt
-
-5. Run the Application
-
-python Backend/main.py
-
-## API Summary
-
-| Endpoint   | Method | Description |
-|------------|--------|-------------|
-| /alerts    | GET    | Retrieve security alerts |
-| /incidents | GET    | Retrieve incidents |
-| /threats   | GET    | Retrieve threat intelligence data |
-| /contain   | POST   | Execute containment actions |
-
-# Future Scope
-
-- User authentication and authorization
-- SIEM integration
-- Email and Slack notifications
-- Advanced analytics dashboard
-- Automated response playbooks
-- Enhanced threat intelligence correlation
 
 # Contributors
 
@@ -762,51 +730,7 @@ python Backend/main.py
 - Alameen
 - Nelna
 - Adarsh
-  
-## System Architecture Diagram
-
-```text
-+--------+
-|  User  |
-+--------+
-     |
-     v
-+--------------+
-| UI Dashboard |
-+--------------+
-     |
-     v
-+-----------+
-| API Layer |
-+-----------+
-     |
-     v
-+-----------+
-| Services  |
-+-----------+
-     |
-     v
-+-----------+
-| Database  |
-+-----------+
-
-     |
-     v
-
-+--------------+
-| Threat Intel |
-+--------------+
-```
-
- Description
-
-- User interacts with the dashboard.
-- UI sends requests to API endpoints.
-- API communicates with service modules.
-- Services process incidents and alerts.
-- Database stores incident and alert data.
-- Threat Intelligence enriches security events
-  
+    
 ## SOAR Workflow Diagram
 
 ```text
@@ -1008,3 +932,11 @@ Responsible for:
 - Project Documentation
 - Deployment Planning
 - Team Coordination
+
+---
+
+⭐ If you found this project useful, consider giving it a star.
+
+Developed during the Infotact Cybersecurity Internship.
+
+Made with ❤️ using FastAPI, React and Python.
