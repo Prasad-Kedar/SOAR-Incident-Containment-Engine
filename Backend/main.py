@@ -3,7 +3,6 @@ from fastapi import FastAPI, Depends
 from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from fastapi import FastAPI
 from models import Alert
 from datetime import datetime
 from db_session import SessionLocal
@@ -17,8 +16,12 @@ from models_db import (
 )
 from normalizer import normalize_alert
 from threat_intel import check_ip
-from jose import jwt
+from jose import jwt, JWTError
 from models_db import User
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+
+security = HTTPBearer()
 
 app = FastAPI()
 
@@ -45,6 +48,22 @@ SECRET_KEY = "soar-secret-key"
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+):
+    try:
+        payload = jwt.decode(
+            credentials.credentials,
+            SECRET_KEY,
+            algorithms=["HS256"]
+        )
+        return payload
+    except JWTError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
 
 @app.get("/")
 def home():
@@ -192,9 +211,11 @@ def incident_intel(incident_id: int):
 
     if not incident:
         db.close()
-        return {
-            "message": "Incident not found"
-        }
+        raise HTTPException(
+        status_code=404,
+        detail="Incident not found"
+)
+
 
     intel = check_ip(
         incident.src_ip
@@ -243,9 +264,11 @@ def block_ip(incident_id: int):
 
     if not incident:
         db.close()
-        return {
-            "message": "Incident not found"
-        }
+        raise HTTPException(
+    status_code=404,
+    detail="Incident not found"
+)
+
     action = ResponseAction(
         incident_id=incident_id,
         action_type="BLOCK_IP",
@@ -272,9 +295,11 @@ def isolate_host(incident_id: int):
 
     if not incident:
         db.close()
-        return {
-            "message": "Incident not found"
-        }
+        raise HTTPException(
+        status_code=404,
+        detail="Incident not found"
+)
+
     action = ResponseAction(
         incident_id=incident_id,
         action_type="ISOLATE_HOST",
@@ -430,10 +455,10 @@ def escalate_incident(incident_id: int):
 
     if not incident:
         db.close()
-        return {
-            "message": "Incident not found"
-        }
-
+        raise HTTPException(
+         status_code=404,
+          detail="Incident not found"
+)
     db.close()
 
     return {
@@ -507,10 +532,10 @@ def assign_incident(
 
     if not incident:
         db.close()
-
-        return {
-            "message": "Incident not found"
-        }
+        raise HTTPException(
+         status_code=404,
+          detail="Incident not found"
+)      
 
     incident.assigned_to = analyst_name
 
@@ -596,6 +621,16 @@ def create_user():
 
     db = SessionLocal()
 
+    existing = db.query(User).filter(
+        User.username == "admin"
+    ).first()
+
+    if existing:
+        db.close()
+        return {
+            "message": "User already exists"
+        }
+
     user = User(
         username="admin",
         password="admin123",
@@ -654,26 +689,39 @@ def login(request: LoginRequest):
     }
 
 @app.get("/secure/dashboard")
-def secure_dashboard():
-
+def secure_dashboard(user=Depends(verify_token)):
     return {
-        "message": "Authorized Access"
+        "message": "Authorized Access",
+        "user": user["user"],
+        "role": user["role"]
     }
 
 @app.get("/admin/dashboard")
-def admin_dashboard():
+def admin_dashboard(user=Depends(verify_token)):
+
+    if user["role"] != "SOC_ADMIN":
+        raise HTTPException(
+            status_code=403,
+            detail="Access Denied"
+        )
 
     return {
-        "role": "SOC_ADMIN",
-        "message": "Admin Dashboard Access Granted"
+        "message": "Admin Dashboard",
+        "user": user["user"]
     }
 
 @app.get("/analyst/dashboard")
-def analyst_dashboard():
+def analyst_dashboard(user=Depends(verify_token)):
+
+    if user["role"] not in ["SOC_ADMIN", "SOC_ANALYST"]:
+        raise HTTPException(
+            status_code=403,
+            detail="Access Denied"
+        )
 
     return {
-        "role": "SOC_ANALYST",
-        "message": "Analyst Dashboard Access Granted"
+        "message": "Analyst Dashboard",
+        "user": user["user"]
     }
 
 @app.get("/role/{role}")
