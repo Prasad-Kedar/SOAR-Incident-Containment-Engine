@@ -291,12 +291,21 @@ export async function notifyIncident(incidentId) {
   return response.json();
 }
 
-export async function login() {
+export async function login(username, password) {
 
   const response = await fetch(
     `${BASE_URL}/login`,
     {
       method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        username,
+        password,
+      }),
     }
   );
 
@@ -304,9 +313,14 @@ export async function login() {
     throw new Error("Login failed");
   }
 
-  return response.json();
-}
+  const data = await response.json();
 
+// Save JWT
+localStorage.setItem("token", data.access_token);
+localStorage.setItem("role", data.role);
+
+return data;
+}
 export async function getSecureDashboard() {
 
   const response = await fetch(
