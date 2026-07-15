@@ -14,10 +14,10 @@ function App() {
     <BrowserRouter>
      <Routes>
 
-  <Route
-    path="/logian"
-    element={<Login />}
-  />
+ <Route
+  path="/login"
+  element={<Login />}
+/>
 
   <Route
     path="/"
