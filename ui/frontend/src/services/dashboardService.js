@@ -292,6 +292,18 @@ export async function notifyIncident(incidentId) {
 }
 
 export async function login(username, password) {
+ 
+  prasad-branch
+  const response = await fetch(`${BASE_URL}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    }),
+  });
 
   const response = await fetch(
     `${BASE_URL}/login`,
@@ -308,6 +320,7 @@ export async function login(username, password) {
       }),
     }
   );
+ main
 
   if (!response.ok) {
     throw new Error("Login failed");
