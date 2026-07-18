@@ -292,7 +292,8 @@ export async function notifyIncident(incidentId) {
 }
 
 export async function login(username, password) {
-
+ 
+  prasad-branch
   const response = await fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
@@ -304,13 +305,35 @@ export async function login(username, password) {
     }),
   });
 
+  const response = await fetch(
+    `${BASE_URL}/login`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    }
+  );
+ main
+
   if (!response.ok) {
     throw new Error("Login failed");
   }
 
-  return response.json();
-}
+  const data = await response.json();
 
+// Save JWT
+localStorage.setItem("token", data.access_token);
+localStorage.setItem("role", data.role);
+
+return data;
+}
 export async function getSecureDashboard() {
 
   const response = await fetch(
