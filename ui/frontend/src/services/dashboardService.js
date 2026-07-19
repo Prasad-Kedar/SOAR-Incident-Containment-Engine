@@ -310,12 +310,12 @@ export async function login(username, password) {
 
   const data = await response.json();
 
-  // Save JWT
   localStorage.setItem("token", data.access_token);
   localStorage.setItem("role", data.role);
 
   return data;
 }
+
 export async function getSecureDashboard() {
 
   const response = await fetch(
