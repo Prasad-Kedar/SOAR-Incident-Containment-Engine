@@ -951,3 +951,27 @@ def get_cases():
     db.close()
 
     return result
+
+@app.put("/incident/{incident_id}/close")
+def close_incident(incident_id: int):
+
+    db = SessionLocal()
+
+    incident = db.query(AlertDB).filter(AlertDB.id == incident_id).first()
+
+    if not incident:
+        db.close()
+        raise HTTPException(status_code=404, detail="Incident not found")
+
+    incident.status = "Closed"
+
+    db.commit()
+    db.refresh(incident)
+
+    db.close()
+
+    return {
+        "message": "Incident closed successfully",
+        "incident_id": incident_id,
+        "status": incident.status
+    }
