@@ -5,3 +5,5 @@ class Alert(BaseModel):
     severity: str
     event_type: str
     timestamp: str
+
+    
